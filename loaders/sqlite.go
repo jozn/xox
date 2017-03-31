@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	_ "github.com/mattn/go-sqlite3"
+	//_ "github.com/mattn/go-sqlite3"
 
 	"github.com/jozn/xo_pg/internal"
 	"github.com/jozn/xo_pg/models"

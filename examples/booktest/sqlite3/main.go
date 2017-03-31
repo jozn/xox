@@ -6,10 +6,10 @@ import (
 	"log"
 	"time"
 
-	_ "github.com/mattn/go-sqlite3"
+	//_ "github.com/mattn/go-sqlite3"
 
 	"github.com/knq/dburl"
-	"github.com/knq/xoutil"
+	"github.com/jozn/xoutil"
 
 	"github.com/jozn/xo_pg/examples/booktest/sqlite3/models"
 )

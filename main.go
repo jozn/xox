@@ -21,7 +21,7 @@ import (
 	"github.com/jozn/xo_pg/models"
 
 	_ "github.com/jozn/xo_pg/loaders"
-	_ "github.com/knq/xoutil"
+	_ "github.com/jozn/xoutil"
 )
 
 func main() {
