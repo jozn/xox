@@ -8,9 +8,9 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"github.com/knq/snaker"
 	"github.com/jozn/xo_pg/internal"
 	"github.com/jozn/xo_pg/models"
+	"github.com/knq/snaker"
 )
 
 func init() {
@@ -88,49 +88,58 @@ func PgParseType(args *internal.ArgType, dt string, nullable bool) (int, string,
 			typ = "sql.NullString"
 		}
 
-	case "smallint":
+		//for convenience we use just int - our apps are for just 64bit archs
+	case "smallint", "integer", "bigint", "smallserial", "serial", "bigserial":
 		nilVal = "0"
-		typ = "int16"
+		typ = "int"
 		if nullable {
-			nilVal = "sql.NullInt64{}"
-			typ = "sql.NullInt64"
-		}
-	case "integer":
-		nilVal = "0"
-		typ = args.Int32Type
-		if nullable {
-			nilVal = "sql.NullInt64{}"
-			typ = "sql.NullInt64"
-		}
-	case "bigint":
-		nilVal = "0"
-		typ = "int64"
-		if nullable {
-			nilVal = "sql.NullInt64{}"
-			typ = "sql.NullInt64"
+			nilVal = "sql.NullInt{}"
+			typ = "sql.NullInt"
 		}
 
-	case "smallserial":
-		nilVal = "0"
-		typ = "uint16"
-		if nullable {
-			nilVal = "sql.NullInt64{}"
-			typ = "sql.NullInt64"
-		}
-	case "serial":
-		nilVal = "0"
-		typ = args.Uint32Type
-		if nullable {
-			nilVal = "sql.NullInt64{}"
-			typ = "sql.NullInt64"
-		}
-	case "bigserial":
-		nilVal = "0"
-		typ = "uint64"
-		if nullable {
-			nilVal = "sql.NullInt64{}"
-			typ = "sql.NullInt64"
-		}
+		/*case "smallint":
+		      nilVal = "0"
+		      typ = "int16"
+		      if nullable {
+		          nilVal = "sql.NullInt64{}"
+		          typ = "sql.NullInt64"
+		      }
+		  case "integer":
+		      nilVal = "0"
+		      typ = args.Int32Type
+		      if nullable {
+		          nilVal = "sql.NullInt64{}"
+		          typ = "sql.NullInt64"
+		      }
+		  case "bigint":
+		      nilVal = "0"
+		      typ = "int64"
+		      if nullable {
+		          nilVal = "sql.NullInt64{}"
+		          typ = "sql.NullInt64"
+		      }
+
+		  case "smallserial":
+		      nilVal = "0"
+		      typ = "uint16"
+		      if nullable {
+		          nilVal = "sql.NullInt64{}"
+		          typ = "sql.NullInt64"
+		      }
+		  case "serial":
+		      nilVal = "0"
+		      typ = args.Uint32Type
+		      if nullable {
+		          nilVal = "sql.NullInt64{}"
+		          typ = "sql.NullInt64"
+		      }
+		  case "bigserial":
+		      nilVal = "0"
+		      typ = "uint64"
+		      if nullable {
+		          nilVal = "sql.NullInt64{}"
+		          typ = "sql.NullInt64"
+		      }*/
 
 	case "real":
 		nilVal = "0.0"
