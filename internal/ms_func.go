@@ -40,6 +40,10 @@ func ms_gen_types() []string {
 	return []string{"Deleter", "Updater", "Selector"}
 }
 
+func ms_col_name(f *Field) []string {
+    return
+}
+
 func ms_to_slice(typ ...string) []string {
 	return typ
 }

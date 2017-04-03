@@ -29,6 +29,7 @@ func (a *ArgType) NewTemplateFuncs() template.FuncMap {
 		"hasfield":       a.hasfield,
 
         "toLower":              strings.ToLower,
+        "ms_col_nanme":         ms_col_name,
         "ms_conds":             ms_conds,
         "ms_in":                ms_in,
         "ms_gen_types":         ms_gen_types,
