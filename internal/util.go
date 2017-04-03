@@ -11,7 +11,7 @@ import (
 	"unicode"
 
 	"github.com/gedex/inflector"
-	"github.com/knq/snaker"
+	"github.com/jozn/xo_pg/snaker"
 )
 
 // ParseQuery takes the query in args and looks for strings in the form of

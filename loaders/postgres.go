@@ -10,7 +10,7 @@ import (
 
 	"github.com/jozn/xo_pg/internal"
 	"github.com/jozn/xo_pg/models"
-	"github.com/knq/snaker"
+	"github.com/jozn/xo_pg/snaker"
 )
 
 func init() {

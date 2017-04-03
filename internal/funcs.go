@@ -5,7 +5,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/knq/snaker"
+	"github.com/jozn/xo_pg/snaker"
 	"github.com/jozn/xo_pg/models"
 )
 
@@ -27,6 +27,15 @@ func (a *ArgType) NewTemplateFuncs() template.FuncMap {
 		"colname":        a.colname,
 		"hascolumn":      a.hascolumn,
 		"hasfield":       a.hasfield,
+
+        "toLower":              strings.ToLower,
+        "ms_conds":             ms_conds,
+        "ms_in":                ms_in,
+        "ms_gen_types":         ms_gen_types,
+        "ms_to_slice":          ms_to_slice,
+        "ms_str_cond":          ms_str_cond,
+        "ms_append_fieldnames": ms_append_fieldnames,
+        "ms_question_mark":     ms_question_mark,
 	}
 }
 
@@ -295,6 +304,7 @@ func (a *ArgType) fieldnames(fields []*Field, prefix string, ignoreNames ...stri
 			str = str + ", "
 		}
 		str = str + prefix + "." + f.Name
+        //fmt.Println(f.Name)
 		i++
 	}
 

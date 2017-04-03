@@ -5,7 +5,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/knq/snaker"
+	"github.com/jozn/xo_pg/snaker"
 	"github.com/jozn/xo_pg/internal"
 	"github.com/jozn/xo_pg/models"
 )

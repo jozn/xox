@@ -7,7 +7,7 @@ import (
 
 	"github.com/gedex/inflector"
 
-	"github.com/knq/snaker"
+	"github.com/jozn/xo_pg/snaker"
 	"github.com/jozn/xo_pg/models"
 )
 
