@@ -6,3 +6,4 @@
 *.sqlite3-journal
 .idea
 *.iml
+*.exe
