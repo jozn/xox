@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/jozn/xo_pg/snaker"
+	"ms/xox/snaker"
 )
 
 // FkMode represents the different foreign key naming modes.

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/jozn/xo_pg/snaker"
-	"github.com/jozn/xo_pg/models"
+	"ms/xox/snaker"
+	"ms/xox/models"
 )
 
 // NewTemplateFuncs returns a set of template funcs bound to the supplied args.

@@ -1,6 +1,6 @@
 package internal
 
-import "github.com/jozn/xo_pg/models"
+import "ms/xox/models"
 
 // TemplateType represents a template type.
 type TemplateType uint

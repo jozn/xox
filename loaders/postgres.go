@@ -8,9 +8,9 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"github.com/jozn/xo_pg/internal"
-	"github.com/jozn/xo_pg/models"
-	"github.com/jozn/xo_pg/snaker"
+	"ms/xox/internal"
+	"ms/xox/models"
+	"ms/xox/snaker"
 )
 
 func init() {
