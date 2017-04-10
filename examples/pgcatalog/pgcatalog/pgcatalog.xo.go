@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"ms/xox/examples/pgcatalog/pgtypes"
+
 	"github.com/lib/pq"
 )
 

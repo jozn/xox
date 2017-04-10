@@ -1,17 +1,16 @@
-package loaders
+package internal
 
 import (
 	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"ms/xox/snaker"
-	"ms/xox/internal"
 	"ms/xox/models"
+	"ms/xox/snaker"
 )
 
 func init() {
-	internal.SchemaLoaders["mysql"] = internal.TypeLoader{
+	SchemaLoaders["mysql"] = TypeLoader{
 		ParamN:          func(int) string { return "?" },
 		MaskFunc:        func() string { return "?" },
 		ProcessRelkind:  MyRelkind,
@@ -31,7 +30,7 @@ func init() {
 }
 
 // MySchema retrieves the name of the current schema.
-func MySchema(args *internal.ArgType) (string, error) {
+func MySchema(args *ArgType) (string, error) {
 	var err error
 
 	// sql query
@@ -50,12 +49,12 @@ func MySchema(args *internal.ArgType) (string, error) {
 }
 
 // MyRelkind returns the mysql string representation for RelType.
-func MyRelkind(relType internal.RelType) string {
+func MyRelkind(relType RelType) string {
 	var s string
 	switch relType {
-	case internal.Table:
+	case Table:
 		s = "BASE TABLE"
-	case internal.View:
+	case View:
 		s = "VIEW"
 	default:
 		panic("unsupported RelType")
@@ -65,7 +64,7 @@ func MyRelkind(relType internal.RelType) string {
 
 // MyParseType parse a mysql type into a Go type based on the column
 // definition.
-func MyParseType(args *internal.ArgType, dt string, nullable bool) (int, string, string) {
+func MyParseType(args *ArgType, dt string, nullable bool) (int, string, string) {
 	precision := 0
 	nilVal := "nil"
 	unsigned := false
@@ -187,7 +186,7 @@ switchDT:
 
 	// add 'u' as prefix to type if its unsigned
 	// FIXME: this needs to be tested properly...
-	if unsigned && internal.IntRE.MatchString(typ) {
+	if unsigned && IntRE.MatchString(typ) {
 		typ = "u" + typ
 	}
 
@@ -255,11 +254,11 @@ func MyTables(db models.XODB, schema string, relkind string) ([]*models.Table, e
 }
 
 // MyQueryColumns parses the query and generates a type for it.
-func MyQueryColumns(args *internal.ArgType, inspect []string) ([]*models.Column, error) {
+func MyQueryColumns(args *ArgType, inspect []string) ([]*models.Column, error) {
 	var err error
 
 	// create temporary view xoid
-	xoid := "_xo_" + internal.GenRandomID()
+	xoid := "_xo_" + GenRandomID()
 	viewq := `CREATE VIEW ` + xoid + ` AS (` + strings.Join(inspect, "\n") + `)`
 	models.XOLog(viewq)
 	_, err = args.DB.Exec(viewq)

@@ -10,8 +10,9 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/gedex/inflector"
 	"ms/xox/snaker"
+
+	"github.com/gedex/inflector"
 )
 
 // ParseQuery takes the query in args and looks for strings in the form of

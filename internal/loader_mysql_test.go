@@ -1,10 +1,8 @@
-package loaders_test
+package internal
 
 import (
+	"ms/libs/xo/loaders"
 	"testing"
-
-	"ms/xox/internal"
-	"ms/xox/loaders"
 )
 
 func Test_MyParseType(t *testing.T) {
@@ -98,7 +96,7 @@ func Test_MyParseType(t *testing.T) {
 	}
 
 	for i, tt := range tests {
-		precision, nilVal, typ := loaders.MyParseType(&internal.ArgType{}, tt.dt, tt.nullable)
+		precision, nilVal, typ := loaders.MyParseType(&ArgType{}, tt.dt, tt.nullable)
 		if precision != tt.precision || nilVal != tt.nilVal || typ != tt.typ {
 			t.Fatalf("test #%d: %s\n\texp: %d, %s, %s\n\tgot: %d, %s, %s", i+1, tt.desc, tt.precision, tt.nilVal, tt.typ, precision, nilVal, typ)
 		}

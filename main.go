@@ -16,11 +16,13 @@ import (
 
 	"github.com/alexflint/go-arg"
 
-	"github.com/knq/dburl"
 	"ms/xox/internal"
 	"ms/xox/models"
 
-	_ "ms/xox/loaders"
+	"github.com/knq/dburl"
+
+	//_ "ms/xox/loaders"
+
 	_ "github.com/jozn/xoutil"
 )
 
@@ -31,7 +33,7 @@ func main() {
 	internal.Args = internal.NewDefaultArgs()
 	args := internal.Args
 
-    fmt.Println(os.Args)//me
+	fmt.Println(os.Args) //me
 	// parse args
 	arg.MustParse(args)
 

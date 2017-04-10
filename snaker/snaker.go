@@ -63,14 +63,14 @@ func CamelToSnakeIdentifier(s string) string {
 func SnakeToCamel(s string) string {
 	var r string
 
-    if len(s) == 0{
-        return s
-    }
+	if len(s) == 0 {
+		return s
+	}
 
-    //ME: hack snake just for those of having "_"
-    if strings.Index(s,"_") < 0 {
-        return strings.ToUpper(s[:1]) + s[1:]
-    }
+	//ME: hack snake just for those of having "_"
+	if strings.Index(s, "_") < 0 {
+		return strings.ToUpper(s[:1]) + s[1:]
+	}
 
 	for _, w := range strings.Split(s, "_") {
 		if w == "" {

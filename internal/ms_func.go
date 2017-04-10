@@ -41,7 +41,7 @@ func ms_gen_types() []string {
 }
 
 func ms_col_name(f *Field) []string {
-    return []string{}
+	return []string{}
 }
 
 func ms_to_slice(typ ...string) []string {

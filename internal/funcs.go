@@ -5,8 +5,8 @@ import (
 	"strings"
 	"text/template"
 
-	"ms/xox/snaker"
 	"ms/xox/models"
+	"ms/xox/snaker"
 )
 
 // NewTemplateFuncs returns a set of template funcs bound to the supplied args.
@@ -28,15 +28,15 @@ func (a *ArgType) NewTemplateFuncs() template.FuncMap {
 		"hascolumn":      a.hascolumn,
 		"hasfield":       a.hasfield,
 
-        "toLower":              strings.ToLower,
-        "ms_col_nanme":         ms_col_name,
-        "ms_conds":             ms_conds,
-        "ms_in":                ms_in,
-        "ms_gen_types":         ms_gen_types,
-        "ms_to_slice":          ms_to_slice,
-        "ms_str_cond":          ms_str_cond,
-        "ms_append_fieldnames": ms_append_fieldnames,
-        "ms_question_mark":     ms_question_mark,
+		"toLower":              strings.ToLower,
+		"ms_col_nanme":         ms_col_name,
+		"ms_conds":             ms_conds,
+		"ms_in":                ms_in,
+		"ms_gen_types":         ms_gen_types,
+		"ms_to_slice":          ms_to_slice,
+		"ms_str_cond":          ms_str_cond,
+		"ms_append_fieldnames": ms_append_fieldnames,
+		"ms_question_mark":     ms_question_mark,
 	}
 }
 
@@ -305,7 +305,7 @@ func (a *ArgType) fieldnames(fields []*Field, prefix string, ignoreNames ...stri
 			str = str + ", "
 		}
 		str = str + prefix + "." + f.Name
-        //fmt.Println(f.Name)
+		//fmt.Println(f.Name)
 		i++
 	}
 
