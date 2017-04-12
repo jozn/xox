@@ -55,12 +55,12 @@ type TypeLoader struct {
 	ProcList        func(XODB, string) ([]*Proc_Impl, error)
 	ProcParamList   func(XODB, string, string) ([]*ProcParam_Impl, error)
 	TableList       func(XODB, string, string) ([]*Table_Impl, error)
-	ColumnList      func(XODB, string, string) ([]*Column, error)
+	ColumnList      func(XODB, string, string) ([]*Column_Impl, error)
 	ForeignKeyList  func(XODB, string, string) ([]*ForeignKey_Impl, error)
 	IndexList       func(XODB, string, string) ([]*Index_Impl, error)
 	IndexColumnList func(XODB, string, string, string) ([]*IndexColumn_Impl, error)
 	QueryStrip      func([]string, []string)
-	QueryColumnList func(*ArgType, []string) ([]*Column, error)
+	QueryColumnList func(*ArgType, []string) ([]*Column_Impl, error)
 }
 
 // NthParam satisifies Loader's NthParam.
@@ -188,7 +188,7 @@ func (tl TypeLoader) ParseQuery(args *ArgType) error {
 			typeTpl.Fields = append(typeTpl.Fields, &Field{
 				Name: colName,
 				Type: colType,
-				Col: &Column{
+				Col: &Column_Impl{
 					ColumnName: snaker.CamelToSnake(colName),
 				},
 			})

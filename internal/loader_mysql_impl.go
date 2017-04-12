@@ -1,7 +1,7 @@
 package internal
 
 // MyTableColumns runs a custom query, returning results as Column.
-func MyTableColumns(db XODB, schema string, table string) ([]*Column, error) {
+func MyTableColumns(db XODB, schema string, table string) ([]*Column_Impl, error) {
 	var err error
 
 	// sql query
@@ -25,9 +25,9 @@ func MyTableColumns(db XODB, schema string, table string) ([]*Column, error) {
 	defer q.Close()
 
 	// load results
-	res := []*Column{}
+	res := []*Column_Impl{}
 	for q.Next() {
-		c := Column{}
+		c := Column_Impl{}
 
 		// scan
 		err = q.Scan(&c.FieldOrdinal, &c.ColumnName, &c.DataType, &c.NotNull, &c.DefaultValue, &c.IsPrimaryKey)
@@ -200,7 +200,7 @@ func MyIndexColumns(db XODB, schema string, table string, index string) ([]*Inde
 //////////////////////////////////////////////////////////////
 
 // MyAutoIncrements runs a custom query, returning results as MyAutoIncrement.
-func MyAutoIncrements(db XODB, schema string) ([]*MyAutoIncrement, error) {
+func MyAutoIncrements(db XODB, schema string) ([]*MyAutoIncrement_Impl, error) {
 	var err error
 
 	// sql query
@@ -218,9 +218,9 @@ func MyAutoIncrements(db XODB, schema string) ([]*MyAutoIncrement, error) {
 	defer q.Close()
 
 	// load results
-	res := []*MyAutoIncrement{}
+	res := []*MyAutoIncrement_Impl{}
 	for q.Next() {
-		mai := MyAutoIncrement{}
+		mai := MyAutoIncrement_Impl{}
 
 		// scan
 		err = q.Scan(&mai.TableName)

@@ -4,7 +4,7 @@ import "database/sql"
 
 
 // Column represents column info.
-type Column struct {
+type Column_Impl struct {
     FieldOrdinal int            // field_ordinal
     ColumnName   string         // column_name
     DataType     string         // data_type
@@ -60,7 +60,7 @@ type IndexColumn_Impl struct {
 
 
 // MyAutoIncrement represents a row from '[custom my_auto_increment]'.
-type MyAutoIncrement struct {
+type MyAutoIncrement_Impl struct {
     TableName string // table_name
 }
 

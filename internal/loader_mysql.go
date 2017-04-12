@@ -229,7 +229,7 @@ func MyTables(db XODB, schema string, relkind string) ([]*Table_Impl, error) {
 	autoIncrements, err := MyAutoIncrements(db, schema)
 	if err != nil {
 		// Set it to an empty set on error.
-		autoIncrements = []*MyAutoIncrement{}
+		autoIncrements = []*MyAutoIncrement_Impl{}
 	}
 
 	// Add information about manual FK.
@@ -253,7 +253,7 @@ func MyTables(db XODB, schema string, relkind string) ([]*Table_Impl, error) {
 }
 
 // MyQueryColumns parses the query and generates a type for it.
-func MyQueryColumns(args *ArgType, inspect []string) ([]*Column, error) {
+func MyQueryColumns(args *ArgType, inspect []string) ([]*Column_Impl, error) {
 	var err error
 
 	// create temporary view xoid

@@ -111,7 +111,7 @@ type Field struct {
 	Type    string
 	NilType string
 	Len     int
-	Col     *Column
+	Col     *Column_Impl
 	Comment string
 }
 
