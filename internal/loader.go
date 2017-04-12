@@ -7,7 +7,6 @@ import (
 
 	"github.com/gedex/inflector"
 
-	"ms/xox/models"
 	"ms/xox/snaker"
 )
 
@@ -51,17 +50,17 @@ type TypeLoader struct {
 	ProcessRelkind  func(RelType) string
 	Schema          func(*ArgType) (string, error)
 	ParseType       func(*ArgType, string, bool) (int, string, string)
-	EnumList        func(models.XODB, string) ([]*models.Enum, error)
-	EnumValueList   func(models.XODB, string, string) ([]*models.EnumValue, error)
-	ProcList        func(models.XODB, string) ([]*models.Proc, error)
-	ProcParamList   func(models.XODB, string, string) ([]*models.ProcParam, error)
-	TableList       func(models.XODB, string, string) ([]*models.Table, error)
-	ColumnList      func(models.XODB, string, string) ([]*models.Column, error)
-	ForeignKeyList  func(models.XODB, string, string) ([]*models.ForeignKey, error)
-	IndexList       func(models.XODB, string, string) ([]*models.Index, error)
-	IndexColumnList func(models.XODB, string, string, string) ([]*models.IndexColumn, error)
+	EnumList        func(XODB, string) ([]*Enum_Impl, error)
+	EnumValueList   func(XODB, string, string) ([]*EnumValue_Impl, error)
+	ProcList        func(XODB, string) ([]*Proc_Impl, error)
+	ProcParamList   func(XODB, string, string) ([]*ProcParam_Impl, error)
+	TableList       func(XODB, string, string) ([]*Table_Impl, error)
+	ColumnList      func(XODB, string, string) ([]*Column, error)
+	ForeignKeyList  func(XODB, string, string) ([]*ForeignKey_Impl, error)
+	IndexList       func(XODB, string, string) ([]*Index_Impl, error)
+	IndexColumnList func(XODB, string, string, string) ([]*IndexColumn_Impl, error)
 	QueryStrip      func([]string, []string)
-	QueryColumnList func(*ArgType, []string) ([]*models.Column, error)
+	QueryColumnList func(*ArgType, []string) ([]*Column, error)
 }
 
 // NthParam satisifies Loader's NthParam.
@@ -151,7 +150,7 @@ func (tl TypeLoader) ParseQuery(args *ArgType) error {
 		Name:    args.QueryType,
 		RelType: Table,
 		Fields:  []*Field{},
-		Table: &models.Table{
+		Table: &Table_Impl{
 			TableName: "[custom " + strings.ToLower(snaker.CamelToSnake(args.QueryType)) + "]",
 		},
 		Comment: args.QueryTypeComment,
@@ -189,7 +188,7 @@ func (tl TypeLoader) ParseQuery(args *ArgType) error {
 			typeTpl.Fields = append(typeTpl.Fields, &Field{
 				Name: colName,
 				Type: colType,
-				Col: &models.Column{
+				Col: &Column{
 					ColumnName: snaker.CamelToSnake(colName),
 				},
 			})
@@ -726,7 +725,7 @@ func (tl TypeLoader) LoadTableIndexes(args *ArgType, typeTpl *Type, ixMap map[st
 			Schema:   args.Schema,
 			Type:     typeTpl,
 			Fields:   []*Field{pk},
-			Index: &models.Index{
+			Index: &Index_Impl{
 				IndexName: ixName,
 				IsUnique:  true,
 				IsPrimary: true,

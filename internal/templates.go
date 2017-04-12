@@ -47,8 +47,8 @@ func (a *ArgType) ExecuteTemplate(tt TemplateType, name string, sub string, obj 
 	// create store
 	v := TBuf{
 		TemplateType: tt,
-		Name:         name,
-		Subname:      sub,
+		Name:         name, // table name: Post, User
+		Subname:      sub,  // ex: index name
 		Buf:          new(bytes.Buffer),
 	}
 

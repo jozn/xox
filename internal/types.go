@@ -1,7 +1,5 @@
 package internal
 
-import "ms/xox/models"
-
 // TemplateType represents a template type.
 type TemplateType uint
 
@@ -82,7 +80,7 @@ func (rt RelType) String() string {
 // EnumValue holds data for a single enum value.
 type EnumValue struct {
 	Name    string
-	Val     *models.EnumValue
+	Val     *EnumValue_Impl
 	Comment string
 }
 
@@ -91,7 +89,7 @@ type Enum struct {
 	Name              string
 	Schema            string
 	Values            []*EnumValue
-	Enum              *models.Enum
+	Enum              *Enum_Impl
 	Comment           string
 	ReverseConstNames bool
 }
@@ -103,7 +101,7 @@ type Proc struct {
 	ProcParams string
 	Params     []*Field
 	Return     *Field
-	Proc       *models.Proc
+	Proc       *Proc_Impl
 	Comment    string
 }
 
@@ -113,7 +111,7 @@ type Field struct {
 	Type    string
 	NilType string
 	Len     int
-	Col     *models.Column
+	Col     *Column
 	Comment string
 }
 
@@ -124,7 +122,7 @@ type Type struct {
 	RelType    RelType
 	PrimaryKey *Field
 	Fields     []*Field
-	Table      *models.Table
+	Table      *Table_Impl
 	Comment    string
 }
 
@@ -136,7 +134,7 @@ type ForeignKey struct {
 	Field      *Field
 	RefType    *Type
 	RefField   *Field
-	ForeignKey *models.ForeignKey
+	ForeignKey *ForeignKey_Impl
 	Comment    string
 }
 
@@ -146,7 +144,7 @@ type Index struct {
 	Schema   string
 	Type     *Type
 	Fields   []*Field
-	Index    *models.Index
+	Index    *Index_Impl
 	Comment  string
 }
 

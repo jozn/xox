@@ -53,8 +53,9 @@ func main() {
 	defer args.DB.Close()
 
 	// load schema name
+	//me: schema is equal to name of database in mysql
 	if args.Schema == "" {
-		args.Schema, err = args.Loader.SchemaName(args)
+		args.Schema, err = args.Loader.SchemaName(args) //me: MySchema(..) returns current db
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)
 			os.Exit(1)
@@ -62,7 +63,7 @@ func main() {
 	}
 
 	// load defs into type map
-	if args.QueryMode {
+	if args.QueryMode { //me: not for us
 		err = args.Loader.ParseQuery(args)
 	} else {
 		err = args.Loader.LoadSchema(args)
@@ -85,8 +86,11 @@ func main() {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
+
+	fmt.Printf("%+v", args)
 }
 
+//me: just configs - skip it
 // processArgs processs cli args.
 func processArgs(args *internal.ArgType) error {
 	var err error
@@ -294,6 +298,7 @@ func getFile(args *internal.ArgType, t *internal.TBuf) (*os.File, error) {
 func writeTypes(args *internal.ArgType) error {
 	var err error
 
+	fmt.Println("args.Generated: ", args.Generated)
 	out := internal.TBufSlice(args.Generated)
 
 	// sort segments

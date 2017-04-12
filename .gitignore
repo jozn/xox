@@ -9,3 +9,4 @@
 *.exe
 out*
 /out
+o.tpl

@@ -5,7 +5,6 @@ import (
 	"strings"
 	"text/template"
 
-	"ms/xox/models"
 	"ms/xox/snaker"
 )
 
@@ -491,7 +490,7 @@ func (a *ArgType) schemafn(s string, names ...string) string {
 
 // colname returns the ColumnName of col, optionally escaping it if
 // ArgType.EscapeColumnNames is toggled.
-func (a *ArgType) colname(col *models.Column) string {
+func (a *ArgType) colname(col *Column) string {
 	if a.EscapeColumnNames {
 		return a.Loader.Escape(ColumnEsc, col.ColumnName)
 	}

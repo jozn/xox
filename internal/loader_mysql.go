@@ -5,7 +5,6 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"ms/xox/models"
 	"ms/xox/snaker"
 )
 
@@ -16,15 +15,15 @@ func init() {
 		ProcessRelkind:  MyRelkind,
 		Schema:          MySchema,
 		ParseType:       MyParseType,
-		EnumList:        models.MyEnums,
+		EnumList:        MyEnums,
 		EnumValueList:   MyEnumValues,
-		ProcList:        models.MyProcs,
-		ProcParamList:   models.MyProcParams,
+		ProcList:        MyProcs,
+		ProcParamList:   MyProcParams,
 		TableList:       MyTables,
-		ColumnList:      models.MyTableColumns,
-		ForeignKeyList:  models.MyTableForeignKeys,
-		IndexList:       models.MyTableIndexes,
-		IndexColumnList: models.MyIndexColumns,
+		ColumnList:      MyTableColumns,
+		ForeignKeyList:  MyTableForeignKeys,
+		IndexList:       MyTableIndexes,
+		IndexColumnList: MyIndexColumns,
 		QueryColumnList: MyQueryColumns,
 	}
 }
@@ -39,7 +38,7 @@ func MySchema(args *ArgType) (string, error) {
 	var schema string
 
 	// run query
-	models.XOLog(sqlstr)
+	XOLog(sqlstr)
 	err = args.DB.QueryRow(sqlstr).Scan(&schema)
 	if err != nil {
 		return "", err
@@ -194,19 +193,19 @@ switchDT:
 }
 
 // MyEnumValues loads the enum values.
-func MyEnumValues(db models.XODB, schema string, enum string) ([]*models.EnumValue, error) {
+func MyEnumValues(db XODB, schema string, enum string) ([]*EnumValue_Impl, error) {
 	var err error
 
 	// load enum vals
-	res, err := models.MyEnumValues(db, schema, enum)
+	res, err := MyEnumValues_Impl(db, schema, enum)
 	if err != nil {
 		return nil, err
 	}
 
 	// process enum vals
-	enumVals := []*models.EnumValue{}
+	enumVals := []*EnumValue_Impl{}
 	for i, ev := range strings.Split(res.EnumValues[1:len(res.EnumValues)-1], "','") {
-		enumVals = append(enumVals, &models.EnumValue{
+		enumVals = append(enumVals, &EnumValue_Impl{
 			EnumValue:  ev,
 			ConstValue: i + 1,
 		})
@@ -217,24 +216,24 @@ func MyEnumValues(db models.XODB, schema string, enum string) ([]*models.EnumVal
 
 // MyTables returns the MySql tables with the manual PK information added.
 // ManualPk is true when the table's primary key is not autoincrement.
-func MyTables(db models.XODB, schema string, relkind string) ([]*models.Table, error) {
+func MyTables(db XODB, schema string, relkind string) ([]*Table_Impl, error) {
 	var err error
 
 	// get the tables
-	rows, err := models.MyTables(db, schema, relkind)
+	rows, err := MyTables_Impl(db, schema, relkind)
 	if err != nil {
 		return nil, err
 	}
 
 	// get the tables that have Autoincrementing included
-	autoIncrements, err := models.MyAutoIncrements(db, schema)
+	autoIncrements, err := MyAutoIncrements(db, schema)
 	if err != nil {
 		// Set it to an empty set on error.
-		autoIncrements = []*models.MyAutoIncrement{}
+		autoIncrements = []*MyAutoIncrement{}
 	}
 
 	// Add information about manual FK.
-	var tables []*models.Table
+	var tables []*Table_Impl
 	for _, row := range rows {
 		manualPk := true
 		// Look for a match in the table name where it contains the autoincrement
@@ -243,7 +242,7 @@ func MyTables(db models.XODB, schema string, relkind string) ([]*models.Table, e
 				manualPk = false
 			}
 		}
-		tables = append(tables, &models.Table{
+		tables = append(tables, &Table_Impl{
 			TableName: row.TableName,
 			Type:      row.Type,
 			ManualPk:  manualPk,
@@ -254,24 +253,24 @@ func MyTables(db models.XODB, schema string, relkind string) ([]*models.Table, e
 }
 
 // MyQueryColumns parses the query and generates a type for it.
-func MyQueryColumns(args *ArgType, inspect []string) ([]*models.Column, error) {
+func MyQueryColumns(args *ArgType, inspect []string) ([]*Column, error) {
 	var err error
 
 	// create temporary view xoid
 	xoid := "_xo_" + GenRandomID()
 	viewq := `CREATE VIEW ` + xoid + ` AS (` + strings.Join(inspect, "\n") + `)`
-	models.XOLog(viewq)
+	XOLog(viewq)
 	_, err = args.DB.Exec(viewq)
 	if err != nil {
 		return nil, err
 	}
 
 	// load columns
-	cols, err := models.MyTableColumns(args.DB, args.Schema, xoid)
+	cols, err := MyTableColumns(args.DB, args.Schema, xoid)
 
 	// drop inspect view
 	dropq := `DROP VIEW ` + xoid
-	models.XOLog(dropq)
+	XOLog(dropq)
 	_, _ = args.DB.Exec(dropq)
 
 	// load column information

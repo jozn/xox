@@ -1,4 +1,4 @@
-package models
+package internal
 
 import "database/sql"
 
@@ -56,13 +56,13 @@ func MyTableColumns(db XODB, schema string, table string) ([]*Column, error) {
 ///////////////////////////////////////////////////////////////////////////
 
 // Enum represents a enum.
-type Enum struct {
+type Enum_Impl struct {
 	EnumName string // enum_name
 }
 
 //me: DEL THIS NOT USED
-// EnumValue represents a enum value.
-type EnumValue struct {
+// EnumValue_Impl represents a enum value.
+type EnumValue_Impl struct {
 	EnumValue  string // enum_value
 	ConstValue int    // const_value
 }
@@ -70,7 +70,7 @@ type EnumValue struct {
 //////
 
 // MyEnums runs a custom query, returning results as Enum.
-func MyEnums(db XODB, schema string) ([]*Enum, error) {
+func MyEnums(db XODB, schema string) ([]*Enum_Impl, error) {
 	var err error
 
 	// sql query
@@ -88,9 +88,9 @@ func MyEnums(db XODB, schema string) ([]*Enum, error) {
 	defer q.Close()
 
 	// load results
-	res := []*Enum{}
+	res := []*Enum_Impl{}
 	for q.Next() {
-		e := Enum{}
+		e := Enum_Impl{}
 
 		// scan
 		err = q.Scan(&e.EnumName)
@@ -107,7 +107,7 @@ func MyEnums(db XODB, schema string) ([]*Enum, error) {
 //////////////////////////////////////////////////////////
 
 // ForeignKey represents a foreign key.
-type ForeignKey struct {
+type ForeignKey_Impl struct {
 	ForeignKeyName string // foreign_key_name
 	ColumnName     string // column_name
 	RefIndexName   string // ref_index_name
@@ -121,7 +121,7 @@ type ForeignKey struct {
 }
 
 // MyTableForeignKeys runs a custom query, returning results as ForeignKey.
-func MyTableForeignKeys(db XODB, schema string, table string) ([]*ForeignKey, error) {
+func MyTableForeignKeys(db XODB, schema string, table string) ([]*ForeignKey_Impl, error) {
 	var err error
 
 	// sql query
@@ -142,9 +142,9 @@ func MyTableForeignKeys(db XODB, schema string, table string) ([]*ForeignKey, er
 	defer q.Close()
 
 	// load results
-	res := []*ForeignKey{}
+	res := []*ForeignKey_Impl{}
 	for q.Next() {
-		fk := ForeignKey{}
+		fk := ForeignKey_Impl{}
 
 		// scan
 		err = q.Scan(&fk.ForeignKeyName, &fk.ColumnName, &fk.RefTableName, &fk.RefColumnName)
@@ -160,7 +160,7 @@ func MyTableForeignKeys(db XODB, schema string, table string) ([]*ForeignKey, er
 
 ///////////////////////////////////////////////////////////////////
 // Index represents an index.
-type Index struct {
+type Index_Impl struct {
 	IndexName string // index_name
 	IsUnique  bool   // is_unique
 	IsPrimary bool   // is_primary
@@ -170,7 +170,7 @@ type Index struct {
 }
 
 // MyTableIndexes runs a custom query, returning results as Index.
-func MyTableIndexes(db XODB, schema string, table string) ([]*Index, error) {
+func MyTableIndexes(db XODB, schema string, table string) ([]*Index_Impl, error) {
 	var err error
 
 	// sql query
@@ -189,9 +189,9 @@ func MyTableIndexes(db XODB, schema string, table string) ([]*Index, error) {
 	defer q.Close()
 
 	// load results
-	res := []*Index{}
+	res := []*Index_Impl{}
 	for q.Next() {
-		i := Index{}
+		i := Index_Impl{}
 
 		// scan
 		err = q.Scan(&i.IndexName, &i.IsUnique)
@@ -208,14 +208,14 @@ func MyTableIndexes(db XODB, schema string, table string) ([]*Index, error) {
 ////////////////////////////////////////////////////////////////////////
 
 // IndexColumn represents index column info.
-type IndexColumn struct {
+type IndexColumn_Impl struct {
 	SeqNo      int    // seq_no
 	Cid        int    // cid
 	ColumnName string // column_name
 }
 
 // MyIndexColumns runs a custom query, returning results as IndexColumn.
-func MyIndexColumns(db XODB, schema string, table string, index string) ([]*IndexColumn, error) {
+func MyIndexColumns(db XODB, schema string, table string, index string) ([]*IndexColumn_Impl, error) {
 	var err error
 
 	// sql query
@@ -235,9 +235,9 @@ func MyIndexColumns(db XODB, schema string, table string, index string) ([]*Inde
 	defer q.Close()
 
 	// load results
-	res := []*IndexColumn{}
+	res := []*IndexColumn_Impl{}
 	for q.Next() {
-		ic := IndexColumn{}
+		ic := IndexColumn_Impl{}
 
 		// scan
 		err = q.Scan(&ic.SeqNo, &ic.ColumnName)
@@ -295,12 +295,12 @@ func MyAutoIncrements(db XODB, schema string) ([]*MyAutoIncrement, error) {
 
 ////////////////////////////////////////////
 // MyEnumValue represents a row from '[custom my_enum_value]'.
-type MyEnumValue struct {
+type MyEnumValue_Impl struct {
 	EnumValues string // enum_values
 }
 
 // MyEnumValues runs a custom query, returning results as MyEnumValue.
-func MyEnumValues(db XODB, schema string, enum string) (*MyEnumValue, error) {
+func MyEnumValues_Impl(db XODB, schema string, enum string) (*MyEnumValue_Impl, error) {
 	var err error
 
 	// sql query
@@ -311,7 +311,7 @@ func MyEnumValues(db XODB, schema string, enum string) (*MyEnumValue, error) {
 
 	// run query
 	XOLog(sqlstr, schema, enum)
-	var mev MyEnumValue
+	var mev MyEnumValue_Impl
 	err = db.QueryRow(sqlstr, schema, enum).Scan(&mev.EnumValues)
 	if err != nil {
 		return nil, err
@@ -322,13 +322,13 @@ func MyEnumValues(db XODB, schema string, enum string) (*MyEnumValue, error) {
 
 //////////////////////////////////////////////////////
 // Proc represents a stored procedure.
-type Proc struct {
+type Proc_Impl struct {
 	ProcName   string // proc_name
 	ReturnType string // return_type
 }
 
 // MyProcs runs a custom query, returning results as Proc.
-func MyProcs(db XODB, schema string) ([]*Proc, error) {
+func MyProcs(db XODB, schema string) ([]*Proc_Impl, error) {
 	var err error
 
 	// sql query
@@ -349,9 +349,9 @@ func MyProcs(db XODB, schema string) ([]*Proc, error) {
 	defer q.Close()
 
 	// load results
-	res := []*Proc{}
+	res := []*Proc_Impl{}
 	for q.Next() {
-		p := Proc{}
+		p := Proc_Impl{}
 
 		// scan
 		err = q.Scan(&p.ProcName, &p.ReturnType)
@@ -368,12 +368,12 @@ func MyProcs(db XODB, schema string) ([]*Proc, error) {
 ///////////////////////////////////////////////////////////
 
 // ProcParam represents a stored procedure param.
-type ProcParam struct {
+type ProcParam_Impl struct {
 	ParamType string // param_type
 }
 
 // MyProcParams runs a custom query, returning results as ProcParam.
-func MyProcParams(db XODB, schema string, proc string) ([]*ProcParam, error) {
+func MyProcParams(db XODB, schema string, proc string) ([]*ProcParam_Impl, error) {
 	var err error
 
 	// sql query
@@ -392,9 +392,9 @@ func MyProcParams(db XODB, schema string, proc string) ([]*ProcParam, error) {
 	defer q.Close()
 
 	// load results
-	res := []*ProcParam{}
+	res := []*ProcParam_Impl{}
 	for q.Next() {
-		pp := ProcParam{}
+		pp := ProcParam_Impl{}
 
 		// scan
 		err = q.Scan(&pp.ParamType)
@@ -411,14 +411,14 @@ func MyProcParams(db XODB, schema string, proc string) ([]*ProcParam, error) {
 ///////////////////////////////////////////////////
 
 // Table represents table info.
-type Table struct {
+type Table_Impl struct {
 	Type      string // type
 	TableName string // table_name
 	ManualPk  bool   // manual_pk
 }
 
 // MyTables runs a custom query, returning results as Table.
-func MyTables(db XODB, schema string, relkind string) ([]*Table, error) {
+func MyTables_Impl(db XODB, schema string, relkind string) ([]*Table_Impl, error) {
 	var err error
 
 	// sql query
@@ -436,9 +436,9 @@ func MyTables(db XODB, schema string, relkind string) ([]*Table, error) {
 	defer q.Close()
 
 	// load results
-	res := []*Table{}
+	res := []*Table_Impl{}
 	for q.Next() {
-		t := Table{}
+		t := Table_Impl{}
 
 		// scan
 		err = q.Scan(&t.TableName)
