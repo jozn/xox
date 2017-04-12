@@ -1,17 +1,5 @@
 package internal
 
-import "database/sql"
-
-// Column represents column info.
-type Column struct {
-	FieldOrdinal int            // field_ordinal
-	ColumnName   string         // column_name
-	DataType     string         // data_type
-	NotNull      bool           // not_null
-	DefaultValue sql.NullString // default_value
-	IsPrimaryKey bool           // is_primary_key
-}
-
 // MyTableColumns runs a custom query, returning results as Column.
 func MyTableColumns(db XODB, schema string, table string) ([]*Column, error) {
 	var err error
@@ -55,18 +43,6 @@ func MyTableColumns(db XODB, schema string, table string) ([]*Column, error) {
 
 ///////////////////////////////////////////////////////////////////////////
 
-// Enum represents a enum.
-type Enum_Impl struct {
-	EnumName string // enum_name
-}
-
-//me: DEL THIS NOT USED
-// EnumValue_Impl represents a enum value.
-type EnumValue_Impl struct {
-	EnumValue  string // enum_value
-	ConstValue int    // const_value
-}
-
 //////
 
 // MyEnums runs a custom query, returning results as Enum.
@@ -105,20 +81,6 @@ func MyEnums(db XODB, schema string) ([]*Enum_Impl, error) {
 }
 
 //////////////////////////////////////////////////////////
-
-// ForeignKey represents a foreign key.
-type ForeignKey_Impl struct {
-	ForeignKeyName string // foreign_key_name
-	ColumnName     string // column_name
-	RefIndexName   string // ref_index_name
-	RefTableName   string // ref_table_name
-	RefColumnName  string // ref_column_name
-	KeyID          int    // key_id
-	SeqNo          int    // seq_no
-	OnUpdate       string // on_update
-	OnDelete       string // on_delete
-	Match          string // match
-}
 
 // MyTableForeignKeys runs a custom query, returning results as ForeignKey.
 func MyTableForeignKeys(db XODB, schema string, table string) ([]*ForeignKey_Impl, error) {
@@ -159,15 +121,6 @@ func MyTableForeignKeys(db XODB, schema string, table string) ([]*ForeignKey_Imp
 }
 
 ///////////////////////////////////////////////////////////////////
-// Index represents an index.
-type Index_Impl struct {
-	IndexName string // index_name
-	IsUnique  bool   // is_unique
-	IsPrimary bool   // is_primary
-	SeqNo     int    // seq_no
-	Origin    string // origin
-	IsPartial bool   // is_partial
-}
 
 // MyTableIndexes runs a custom query, returning results as Index.
 func MyTableIndexes(db XODB, schema string, table string) ([]*Index_Impl, error) {
@@ -206,13 +159,6 @@ func MyTableIndexes(db XODB, schema string, table string) ([]*Index_Impl, error)
 }
 
 ////////////////////////////////////////////////////////////////////////
-
-// IndexColumn represents index column info.
-type IndexColumn_Impl struct {
-	SeqNo      int    // seq_no
-	Cid        int    // cid
-	ColumnName string // column_name
-}
 
 // MyIndexColumns runs a custom query, returning results as IndexColumn.
 func MyIndexColumns(db XODB, schema string, table string, index string) ([]*IndexColumn_Impl, error) {
@@ -253,11 +199,6 @@ func MyIndexColumns(db XODB, schema string, table string, index string) ([]*Inde
 
 //////////////////////////////////////////////////////////////
 
-// MyAutoIncrement represents a row from '[custom my_auto_increment]'.
-type MyAutoIncrement struct {
-	TableName string // table_name
-}
-
 // MyAutoIncrements runs a custom query, returning results as MyAutoIncrement.
 func MyAutoIncrements(db XODB, schema string) ([]*MyAutoIncrement, error) {
 	var err error
@@ -294,10 +235,6 @@ func MyAutoIncrements(db XODB, schema string) ([]*MyAutoIncrement, error) {
 }
 
 ////////////////////////////////////////////
-// MyEnumValue represents a row from '[custom my_enum_value]'.
-type MyEnumValue_Impl struct {
-	EnumValues string // enum_values
-}
 
 // MyEnumValues runs a custom query, returning results as MyEnumValue.
 func MyEnumValues_Impl(db XODB, schema string, enum string) (*MyEnumValue_Impl, error) {
@@ -321,11 +258,6 @@ func MyEnumValues_Impl(db XODB, schema string, enum string) (*MyEnumValue_Impl, 
 }
 
 //////////////////////////////////////////////////////
-// Proc represents a stored procedure.
-type Proc_Impl struct {
-	ProcName   string // proc_name
-	ReturnType string // return_type
-}
 
 // MyProcs runs a custom query, returning results as Proc.
 func MyProcs(db XODB, schema string) ([]*Proc_Impl, error) {
@@ -367,10 +299,6 @@ func MyProcs(db XODB, schema string) ([]*Proc_Impl, error) {
 
 ///////////////////////////////////////////////////////////
 
-// ProcParam represents a stored procedure param.
-type ProcParam_Impl struct {
-	ParamType string // param_type
-}
 
 // MyProcParams runs a custom query, returning results as ProcParam.
 func MyProcParams(db XODB, schema string, proc string) ([]*ProcParam_Impl, error) {
@@ -409,13 +337,6 @@ func MyProcParams(db XODB, schema string, proc string) ([]*ProcParam_Impl, error
 }
 
 ///////////////////////////////////////////////////
-
-// Table represents table info.
-type Table_Impl struct {
-	Type      string // type
-	TableName string // table_name
-	ManualPk  bool   // manual_pk
-}
 
 // MyTables runs a custom query, returning results as Table.
 func MyTables_Impl(db XODB, schema string, relkind string) ([]*Table_Impl, error) {
