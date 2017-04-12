@@ -43,6 +43,7 @@ var SchemaLoaders = map[string]Loader{}
 
 // TypeLoader provides a common Loader implementation used by the built in
 // schema/query loaders.
+//me: mysql use this as-- this is like the proxy for the common interface for all the databases imple
 type TypeLoader struct {
 	ParamN          func(int) string
 	MaskFunc        func() string
