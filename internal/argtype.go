@@ -150,11 +150,11 @@ type ArgType struct {
 }
 
 // NewDefaultArgs returns the default arguments.
-func NewDefaultArgs() *ArgType {
+func NewDefaultArgs_MS() *ArgType {
 	fkMode := FkModeSmart
 
 	return &ArgType{
-		Suffix:              ".xo.go",
+		Suffix:              ".z.go",
 		Int32Type:           "int",
 		Uint32Type:          "uint",
 		ForeignKeyMode:      &fkMode,
@@ -204,6 +204,63 @@ func NewDefaultArgs() *ArgType {
 			"StringSlice": "ss",
 		},
 	}
+}
+
+// NewDefaultArgs returns the default arguments.
+func NewDefaultArgs() *ArgType {
+    fkMode := FkModeSmart
+
+    return &ArgType{
+        Suffix:              ".xo.go",
+        Int32Type:           "int",
+        Uint32Type:          "uint",
+        ForeignKeyMode:      &fkMode,
+        QueryParamDelimiter: "%%",
+        NameConflictSuffix:  "Val",
+
+        // KnownTypeMap is the collection of known Go types.
+        KnownTypeMap: map[string]bool{
+            "bool":        true,
+            "string":      true,
+            "byte":        true,
+            "rune":        true,
+            "int":         true,
+            "int16":       true,
+            "int32":       true,
+            "int64":       true,
+            "uint":        true,
+            "uint8":       true,
+            "uint16":      true,
+            "uint32":      true,
+            "uint64":      true,
+            "float32":     true,
+            "float64":     true,
+            "Slice":       true,
+            "StringSlice": true,
+        },
+
+        // ShortNameTypeMap is the collection of Go style short names for types, mainly
+        // used for use with declaring a func receiver on a type.
+        ShortNameTypeMap: map[string]string{
+            "bool":        "b",
+            "string":      "s",
+            "byte":        "b",
+            "rune":        "r",
+            "int":         "i",
+            "int16":       "i",
+            "int32":       "i",
+            "int64":       "i",
+            "uint":        "u",
+            "uint8":       "u",
+            "uint16":      "u",
+            "uint32":      "u",
+            "uint64":      "u",
+            "float32":     "f",
+            "float64":     "f",
+            "Slice":       "s",
+            "StringSlice": "ss",
+        },
+    }
 }
 
 // Description provides the description for the command output.

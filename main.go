@@ -30,10 +30,10 @@ func main() {
 	var err error
 
 	// get defaults
-	internal.Args = internal.NewDefaultArgs()
+	internal.Args = internal.NewDefaultArgs_MS()
 	args := internal.Args
 
-	fmt.Println(os.Args) //me
+	//fmt.Println(os.Args) //me
 	// parse args
 	arg.MustParse(args)
 
