@@ -225,7 +225,7 @@ func SingularizeIdentifier(s string) string {
 }
 
 // TBuf is to hold the executed templates.
-type TBuf struct {
+type TBuf_OutputToFileHolder struct {
 	TemplateType TemplateType
 	Name         string
 	Subname      string
@@ -233,7 +233,7 @@ type TBuf struct {
 }
 
 // TBufSlice is a slice of TBuf compatible with sort.Interface.
-type TBufSlice []TBuf
+type TBufSlice []TBuf_OutputToFileHolder
 
 func (t TBufSlice) Len() int {
 	return len(t)

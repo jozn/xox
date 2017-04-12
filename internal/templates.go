@@ -36,18 +36,21 @@ func (a *ArgType) TemplateSet() *TemplateSet {
 
 // ExecuteTemplate loads and parses the supplied template with name and
 // executes it with obj as the context.
-func (a *ArgType) ExecuteTemplate(tt TemplateType, name string, sub string, obj interface{}) error {
+//me: tableName is table or views
+func (a *ArgType) ExecuteTemplate(tt TemplateType, tableNameOrOutFileName string, sub string, obj interface{}) error {
 	var err error
+
+    //fmt.Println("****** ", tableName)
 
 	// setup generated
 	if a.Generated == nil {
-		a.Generated = []TBuf{}
+		a.Generated = []TBuf_OutputToFileHolder{}
 	}
 
 	// create store
-	v := TBuf{
+	v := TBuf_OutputToFileHolder{
 		TemplateType: tt,
-		Name:         name, // table name: Post, User
+		Name:         tableNameOrOutFileName, // table name: Post, User
 		Subname:      sub,  // ex: index name
 		Buf:          new(bytes.Buffer),
 	}
@@ -55,13 +58,7 @@ func (a *ArgType) ExecuteTemplate(tt TemplateType, name string, sub string, obj 
 	// build template name
 	loaderType := ""
 	if tt != XOTemplate {
-		if a.LoaderType == "oci8" || a.LoaderType == "ora" {
-			// force oracle for oci8 since the oracle driver doesn't recognize
-			// 'oracle' as valid protocol
-			loaderType = "oracle."
-		} else {
-			loaderType = a.LoaderType + "."
-		}
+        loaderType = a.LoaderType + "."
 	}
 	templateName := fmt.Sprintf("%s%s.go.tpl", loaderType, tt)
 

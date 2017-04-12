@@ -234,7 +234,7 @@ var files = map[string]*os.File{}
 // getFile builds the filepath from the TBuf information, and retrieves the
 // file from files. If the built filename is not already defined, then it calls
 // the os.OpenFile with the correct parameters depending on the state of args.
-func getFile(args *internal.ArgType, t *internal.TBuf) (*os.File, error) {
+func getFile(args *internal.ArgType, t *internal.TBuf_OutputToFileHolder) (*os.File, error) {
 	var f *os.File
 	var err error
 

@@ -648,24 +648,24 @@ func (tl TypeLoader) LoadTableForeignKeys(args *ArgType, tableMap map[string]*Ty
 func (tl TypeLoader) LoadIndexes(args *ArgType, tableMap map[string]*Type) (map[string]*Index, error) {
 	var err error
 
-	ixMap := map[string]*Index{}
-	for _, t := range tableMap {
+	indexMap := map[string]*Index{}
+	for _, table := range tableMap {
 		// load table indexes
-		err = tl.LoadTableIndexes(args, t, ixMap)
+		err = tl.LoadTableIndexes(args, table, indexMap)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	// generate templates
-	for _, ix := range ixMap {
-		err = args.ExecuteTemplate(IndexTemplate, ix.Type.Name, ix.Index.IndexName, ix)
+	for _, index := range indexMap {
+		err = args.ExecuteTemplate(IndexTemplate, index.Type.Name, index.Index.IndexName, index)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return ixMap, nil
+	return indexMap, nil
 }
 
 // LoadTableIndexes loads schema index definitions per table.

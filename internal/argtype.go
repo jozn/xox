@@ -139,7 +139,7 @@ type ArgType struct {
 	templateSet *TemplateSet `arg:"-"`
 
 	// Generated is the generated templates after a run.
-	Generated []TBuf `arg:"-"`
+	Generated []TBuf_OutputToFileHolder `arg:"-"`
 
 	// KnownTypeMap is the collection of known Go types.
 	KnownTypeMap map[string]bool `arg:"-"`
