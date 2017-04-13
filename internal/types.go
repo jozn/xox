@@ -50,12 +50,12 @@ func (tt TemplateType) String() string {
 		s = "xevent"
 	case XCacheTemplate:
 		s = "xcache"
-    case XPBTemplate:
-        s = "xpb"
-    case XModeLTypeTemplate:
-        s = "model_type"
+	case XPBTemplate:
+		s = "xpb"
+	case XModeLTypeTemplate:
+		s = "model_type"
 
-    /////////////
+		/////////////
 	default:
 		panic("unknown TemplateType")
 	}

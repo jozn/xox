@@ -46,15 +46,15 @@ func ExecuteTemplate(tt TemplateType, nameOfOutPutFile string, sub string, obj i
 		c.Generated = []TBuf_OutputToFileHolder{}
 	}
 
-    //me
-    if nameOfOutPutFile[0] != 'z'{
-        nameOfOutPutFile ="z_" + nameOfOutPutFile
-    }
+	//me
+	if nameOfOutPutFile[0] != 'z' {
+		nameOfOutPutFile = "z_" + nameOfOutPutFile
+	}
 	// create store
 	v := TBuf_OutputToFileHolder{
 		TemplateType: tt,
 		Name:         nameOfOutPutFile, // table name: Post, User
-		Subname:      sub,                     // ex: index name
+		Subname:      sub,              // ex: index name
 		Buf:          new(bytes.Buffer),
 	}
 

@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	_ "os/exec"
+	"os/exec"
 	"path"
 	"sort"
 	"strings"
@@ -273,7 +273,7 @@ func getFile(args *ArgType, t *TBuf_OutputToFileHolder) (*os.File, error) {
 	}
 
 	// file didn't originally exist, so add package header
-    //me:writes header to each file
+	//me:writes header to each file
 	if fi == nil || !args.Append {
 		// add build tags
 		if args.Tags != "" {
@@ -351,6 +351,6 @@ func writeTypes(args *ArgType) error {
 	}
 
 	// process written files with goimports
-	//return exec.Command("goimports", params...).Run()
-    return nil
+	return exec.Command("goimports", params...).Run()
+	//return nil
 }
