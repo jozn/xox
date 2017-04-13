@@ -12,6 +12,7 @@ import (
 
 // Loader is the common interface for database drivers that can generate code
 // from a database schema.
+// me: we don't use this any more - just directly ue TypeLoader -  we keep this code just for docs
 type Loader interface {
 	// NthParam returns the 0-based Nth param for the Loader.
 	NthParam(i int) string
