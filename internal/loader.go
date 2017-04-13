@@ -808,3 +808,35 @@ func (tl TypeLoader) XLoadCaches(args *ArgType, tableMap map[string]*Type) error
 
 	return nil
 }
+
+func (tl TypeLoader) XSamplePB(args *ArgType, tableMap map[string]*Type) error {
+    for _, table := range tableMap {
+        if table.Table.TableName == "post"{
+            //fmt.Println("#######",table.Table.TableName ," ",table.Name)
+            //continue
+        }
+        //err := ExecuteTemplate(XCacheTemplate, "cache_"+ table.Name, "", table)
+        err := ExecuteTemplate(XPBTemplate, "zz_pb", "", table)
+        if err != nil {
+            return err
+        }
+    }
+
+    return nil
+}
+
+func (tl TypeLoader) XModelsTypes(args *ArgType, tableMap map[string]*Type) error {
+    for _, table := range tableMap {
+        if table.Table.TableName == "post"{
+            //fmt.Println("#######",table.Table.TableName ," ",table.Name)
+            //continue
+        }
+        //err := ExecuteTemplate(XCacheTemplate, "cache_"+ table.Name, "", table)
+        err := ExecuteTemplate(XModeLTypeTemplate, "zz_models", "", table)
+        if err != nil {
+            return err
+        }
+    }
+
+    return nil
+}
