@@ -99,6 +99,12 @@ func fkName(mode FkMode, fkMap map[string]*ForeignKey, fk *ForeignKey) string {
 }
 
 // ForeignKeyName returns the foreign key name for the passed type.
+func ForeignKeyName(fkMap map[string]*ForeignKey, fk *ForeignKey) string {
+	return fkName(*c.ForeignKeyMode, fkMap, fk)
+}
+
+///////////del ////////
+// ForeignKeyName returns the foreign key name for the passed type.
 func (a *ArgType) ForeignKeyName(fkMap map[string]*ForeignKey, fk *ForeignKey) string {
 	return fkName(*a.ForeignKeyMode, fkMap, fk)
 }

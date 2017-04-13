@@ -75,7 +75,7 @@ func MyParseType(args *ArgType, dt string, nullable bool) (int, string, string) 
 	}
 
 	// extract precision
-	dt, precision, _ = args.ParsePrecision(dt)
+	dt, precision, _ = ParsePrecision(dt)
 
 	var typ string
 

@@ -12,63 +12,63 @@ import (
 )
 
 // TemplateLoader loads templates from the specified name.
-func (a *ArgType) TemplateLoader(name string) ([]byte, error) {
+func TemplateLoader(name string) ([]byte, error) {
 	// no template path specified
-	if a.TemplatePath == "" {
+	if c.TemplatePath == "" {
 		return templates.Asset(name)
 	}
 
-	return ioutil.ReadFile(path.Join(a.TemplatePath, name))
+	return ioutil.ReadFile(path.Join(c.TemplatePath, name))
 }
 
 // TemplateSet retrieves the created template set.
-func (a *ArgType) TemplateSet() *TemplateSet {
-	if a.templateSet == nil {
-		a.templateSet = &TemplateSet{
-			funcs: a.NewTemplateFuncs(),
-			l:     a.TemplateLoader,
+func GetTemplateSet() *TemplateSet {
+	if c.templateSet == nil {
+		c.templateSet = &TemplateSet{
+			funcs: NewTemplateFuncs(),
+			l:     TemplateLoader,
 			tpls:  map[string]*template.Template{},
 		}
 	}
 
-	return a.templateSet
+	return c.templateSet
 }
 
 // ExecuteTemplate loads and parses the supplied template with name and
 // executes it with obj as the context.
 //me: tableName is table or views
-func (a *ArgType) ExecuteTemplate(tt TemplateType, tableNameOrOutFileName string, sub string, obj interface{}) error {
+func ExecuteTemplate(tt TemplateType, tableNameOrOutFileName string, sub string, obj interface{}) error {
 	var err error
 
-    //fmt.Println("****** ", tableName)
+	//fmt.Println("****** ", tableName)
 
 	// setup generated
-	if a.Generated == nil {
-		a.Generated = []TBuf_OutputToFileHolder{}
+	if c.Generated == nil {
+		c.Generated = []TBuf_OutputToFileHolder{}
 	}
 
 	// create store
 	v := TBuf_OutputToFileHolder{
 		TemplateType: tt,
 		Name:         tableNameOrOutFileName, // table name: Post, User
-		Subname:      sub,  // ex: index name
+		Subname:      sub,                    // ex: index name
 		Buf:          new(bytes.Buffer),
 	}
 
 	// build template name
 	loaderType := ""
 	if tt != XOTemplate {
-        loaderType = a.LoaderType + "."
+		loaderType = c.LoaderType + "."
 	}
 	templateName := fmt.Sprintf("%s%s.go.tpl", loaderType, tt)
 
 	// execute template
-	err = a.TemplateSet().Execute(v.Buf, templateName, obj)
+	err = GetTemplateSet().Execute(v.Buf, templateName, obj)
 	if err != nil {
 		return err
 	}
 
-	a.Generated = append(a.Generated, v)
+	c.Generated = append(c.Generated, v)
 	return nil
 }
 

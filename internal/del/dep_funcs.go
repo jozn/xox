@@ -9,23 +9,23 @@ import (
 )
 
 // NewTemplateFuncs returns a set of template funcs bound to the supplied args.
-func NewTemplateFuncs() template.FuncMap {
+func (c *ArgType) NewTemplateFuncs() template.FuncMap {
 	return template.FuncMap{
-		"colcount":       colcount,
-		"colnames":       colnames,
-		"colnamesquery":  colnamesquery,
-		"colprefixnames": colprefixnames,
-		"colvals":        colvals,
-		"fieldnames":     fieldnames,
-		"goparamlist":    goparamlist,
-		"reniltype":      reniltype,
-		"retype":         retype,
-		"shortname":      shortname,
-		"convext":        convext,
-		"schema":         schemafn,
-		"colname":        colname,
-		"hascolumn":      hascolumn,
-		"hasfield":       hasfield,
+		"colcount":       c.colcount,
+		"colnames":       c.colnames,
+		"colnamesquery":  c.colnamesquery,
+		"colprefixnames": c.colprefixnames,
+		"colvals":        c.colvals,
+		"fieldnames":     c.fieldnames,
+		"goparamlist":    c.goparamlist,
+		"reniltype":      c.reniltype,
+		"retype":         c.retype,
+		"shortname":      c.shortname,
+		"convext":        c.convext,
+		"schema":         c.schemafn,
+		"colname":        c.colname,
+		"hascolumn":      c.hascolumn,
+		"hasfield":       c.hasfield,
 
 		"toLower":              strings.ToLower,
 		"ms_col_nanme":         ms_col_name,
@@ -41,7 +41,7 @@ func NewTemplateFuncs() template.FuncMap {
 
 // retype checks typ against known types, and prefixing
 // ArgType.CustomTypePackage (if applicable).
-func retype(typ string) string {
+func (a *ArgType) retype(typ string) string {
 	if strings.Contains(typ, ".") {
 		return typ
 	}
@@ -52,8 +52,8 @@ func retype(typ string) string {
 		prefix = prefix + "[]"
 	}
 
-	if _, ok := c.KnownTypeMap[typ]; !ok {
-		pkg := c.CustomTypePackage
+	if _, ok := a.KnownTypeMap[typ]; !ok {
+		pkg := a.CustomTypePackage
 		if pkg != "" {
 			pkg = pkg + "."
 		}
@@ -66,17 +66,17 @@ func retype(typ string) string {
 
 // reniltype checks typ against known nil types (similar to retype), prefixing
 // ArgType.CustomTypePackage (if applicable).
-func reniltype(typ string) string {
+func (a *ArgType) reniltype(typ string) string {
 	if strings.Contains(typ, ".") {
 		return typ
 	}
 
 	if strings.HasSuffix(typ, "{}") {
-		if _, ok := c.KnownTypeMap[typ[:len(typ)-2]]; ok {
+		if _, ok := a.KnownTypeMap[typ[:len(typ)-2]]; ok {
 			return typ
 		}
 
-		pkg := c.CustomTypePackage
+		pkg := a.CustomTypePackage
 		if pkg != "" {
 			pkg = pkg + "."
 		}
@@ -103,12 +103,12 @@ func reniltype(typ string) string {
 //
 // Note: recognized types for scopeConflicts are string, []*Field,
 // []*QueryParam.
-func shortname(typ string, scopeConflicts ...interface{}) string {
+func (a *ArgType) shortname(typ string, scopeConflicts ...interface{}) string {
 	var v string
 	var ok bool
 
 	// check short name map
-	if v, ok = c.ShortNameTypeMap[typ]; !ok {
+	if v, ok = a.ShortNameTypeMap[typ]; !ok {
 		// calc the short name
 		u := []string{}
 		for _, s := range strings.Split(strings.ToLower(snaker.CamelToSnake(typ)), "_") {
@@ -124,7 +124,7 @@ func shortname(typ string, scopeConflicts ...interface{}) string {
 		}
 
 		// store back to short name map
-		c.ShortNameTypeMap[typ] = v
+		a.ShortNameTypeMap[typ] = v
 	}
 
 	// initial conflicts are the default imported packages from
@@ -162,7 +162,7 @@ func shortname(typ string, scopeConflicts ...interface{}) string {
 
 	// append suffix if conflict exists
 	if _, ok := conflicts[v]; ok {
-		v = v + c.NameConflictSuffix
+		v = v + a.NameConflictSuffix
 	}
 
 	return v
@@ -174,7 +174,7 @@ func shortname(typ string, scopeConflicts ...interface{}) string {
 // Used to present a comma separated list of column names, that can be used in
 // a SELECT, or UPDATE, or other SQL clause requiring an list of identifiers
 // (ie, "field_1, field_2, field_3, ...").
-func colnames(fields []*Field, ignoreNames ...string) string {
+func (a *ArgType) colnames(fields []*Field, ignoreNames ...string) string {
 	ignore := map[string]bool{}
 	for _, n := range ignoreNames {
 		ignore[n] = true
@@ -190,7 +190,7 @@ func colnames(fields []*Field, ignoreNames ...string) string {
 		if i != 0 {
 			str = str + ", "
 		}
-		str = str + colname(f.Col)
+		str = str + a.colname(f.Col)
 		i++
 	}
 
@@ -203,7 +203,7 @@ func colnames(fields []*Field, ignoreNames ...string) string {
 // Used to create a list of column names in a WHERE clause (ie, "field_1 = $1
 // AND field_2 = $2 AND ...") or in an UPDATE clause (ie, "field = $1, field =
 // $2, ...").
-func colnamesquery(fields []*Field, sep string, ignoreNames ...string) string {
+func (a *ArgType) colnamesquery(fields []*Field, sep string, ignoreNames ...string) string {
 	ignore := map[string]bool{}
 	for _, n := range ignoreNames {
 		ignore[n] = true
@@ -219,7 +219,7 @@ func colnamesquery(fields []*Field, sep string, ignoreNames ...string) string {
 		if i != 0 {
 			str = str + sep
 		}
-		str = str + colname(f.Col) + " = " + c.Loader.NthParam(i)
+		str = str + a.colname(f.Col) + " = " + a.Loader.NthParam(i)
 		i++
 	}
 
@@ -231,7 +231,7 @@ func colnamesquery(fields []*Field, sep string, ignoreNames ...string) string {
 //
 // Used to present a comma separated list of column names with a prefix. Used in
 // a SELECT, or UPDATE (ie, "t.field_1, t.field_2, t.field_3, ...").
-func colprefixnames(fields []*Field, prefix string, ignoreNames ...string) string {
+func (a *ArgType) colprefixnames(fields []*Field, prefix string, ignoreNames ...string) string {
 	ignore := map[string]bool{}
 	for _, n := range ignoreNames {
 		ignore[n] = true
@@ -247,7 +247,7 @@ func colprefixnames(fields []*Field, prefix string, ignoreNames ...string) strin
 		if i != 0 {
 			str = str + ", "
 		}
-		str = str + prefix + "." + colname(f.Col)
+		str = str + prefix + "." + a.colname(f.Col)
 		i++
 	}
 
@@ -259,7 +259,7 @@ func colprefixnames(fields []*Field, prefix string, ignoreNames ...string) strin
 //
 // Used to present a comma separated list of column place holders, used in a
 // SELECT or UPDATE statement (ie, "$1, $2, $3 ...").
-func colvals(fields []*Field, ignoreNames ...string) string {
+func (a *ArgType) colvals(fields []*Field, ignoreNames ...string) string {
 	ignore := map[string]bool{}
 	for _, n := range ignoreNames {
 		ignore[n] = true
@@ -275,7 +275,7 @@ func colvals(fields []*Field, ignoreNames ...string) string {
 		if i != 0 {
 			str = str + ", "
 		}
-		str = str + c.Loader.NthParam(i)
+		str = str + a.Loader.NthParam(i)
 		i++
 	}
 
@@ -287,7 +287,7 @@ func colvals(fields []*Field, ignoreNames ...string) string {
 //
 // Used to present a comma separated list of field names, ie in a Go statement
 // (ie, "t.Field1, t.Field2, t.Field3 ...")
-func fieldnames(fields []*Field, prefix string, ignoreNames ...string) string {
+func (a *ArgType) fieldnames(fields []*Field, prefix string, ignoreNames ...string) string {
 	ignore := map[string]bool{}
 	for _, n := range ignoreNames {
 		ignore[n] = true
@@ -316,7 +316,7 @@ func fieldnames(fields []*Field, prefix string, ignoreNames ...string) string {
 //
 // Used to get the count of fields, and useful for specifying the last SQL
 // parameter.
-func colcount(fields []*Field, ignoreNames ...string) int {
+func (a *ArgType) colcount(fields []*Field, ignoreNames ...string) int {
 	ignore := map[string]bool{}
 	for _, n := range ignoreNames {
 		ignore[n] = true
@@ -396,7 +396,7 @@ var goReservedNames = map[string]string{
 // Used to present a comma separated list of Go variable names for use with as
 // either a Go func parameter list, or in a call to another Go func.
 // (ie, ", a, b, c, ..." or ", a T1, b T2, c T3, ...").
-func goparamlist(fields []*Field, addPrefix bool, addType bool, ignoreNames ...string) string {
+func (a *ArgType) goparamlist(fields []*Field, addPrefix bool, addType bool, ignoreNames ...string) string {
 	ignore := map[string]bool{}
 	for _, n := range ignoreNames {
 		ignore[n] = true
@@ -422,7 +422,7 @@ func goparamlist(fields []*Field, addPrefix bool, addType bool, ignoreNames ...s
 
 		// add the go type
 		if addType {
-			s += " " + retype(f.Type)
+			s += " " + a.retype(f.Type)
 		}
 
 		// add to vals
@@ -444,7 +444,7 @@ func goparamlist(fields []*Field, addPrefix bool, addType bool, ignoreNames ...s
 // to t.
 //
 // FIXME: this should be a better name, like "goconversion" or some such.
-func convext(prefix string, f *Field, t *Field) string {
+func (a *ArgType) convext(prefix string, f *Field, t *Field) string {
 	expr := prefix + "." + f.Name
 	if f.Type == t.Type {
 		return expr
@@ -464,11 +464,11 @@ func convext(prefix string, f *Field, t *Field) string {
 }
 
 // schemafn takes a series of names and joins them with the schema name.
-func schemafn(s string, names ...string) string {
+func (a *ArgType) schemafn(s string, names ...string) string {
 	// escape table names
-	if c.EscapeTableNames {
+	if a.EscapeTableNames {
 		for i, t := range names {
-			names[i] = c.Loader.Escape(TableEsc, t)
+			names[i] = a.Loader.Escape(TableEsc, t)
 		}
 	}
 
@@ -479,8 +479,8 @@ func schemafn(s string, names ...string) string {
 	}
 
 	if s != "" && n != "" {
-		if c.EscapeSchemaName {
-			s = c.Loader.Escape(SchemaEsc, s)
+		if a.EscapeSchemaName {
+			s = a.Loader.Escape(SchemaEsc, s)
 		}
 		s = s + "."
 	}
@@ -490,9 +490,9 @@ func schemafn(s string, names ...string) string {
 
 // colname returns the ColumnName of col, optionally escaping it if
 // ArgType.EscapeColumnNames is toggled.
-func colname(col *Column_Impl) string {
-	if c.EscapeColumnNames {
-		return c.Loader.Escape(ColumnEsc, col.ColumnName)
+func (a *ArgType) colname(col *Column_Impl) string {
+	if a.EscapeColumnNames {
+		return a.Loader.Escape(ColumnEsc, col.ColumnName)
 	}
 
 	return col.ColumnName
@@ -500,7 +500,7 @@ func colname(col *Column_Impl) string {
 
 // hascolumn takes a list of fields and determines if field with the specified
 // column name is in the list.
-func hascolumn(fields []*Field, name string) bool {
+func (a *ArgType) hascolumn(fields []*Field, name string) bool {
 	for _, f := range fields {
 		if f.Col.ColumnName == name {
 			return true
@@ -512,7 +512,7 @@ func hascolumn(fields []*Field, name string) bool {
 
 // hasfield takes a list of fields and determines if field with the specified
 // field name is in the list.
-func hasfield(fields []*Field, name string) bool {
+func (a *ArgType) hasfield(fields []*Field, name string) bool {
 	for _, f := range fields {
 		if f.Name == name {
 			return true

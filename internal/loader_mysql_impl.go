@@ -299,7 +299,6 @@ func MyProcs(db XODB, schema string) ([]*Proc_Impl, error) {
 
 ///////////////////////////////////////////////////////////
 
-
 // MyProcParams runs a custom query, returning results as ProcParam.
 func MyProcParams(db XODB, schema string, proc string) ([]*ProcParam_Impl, error) {
 	var err error

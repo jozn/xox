@@ -17,8 +17,6 @@ import (
 	"github.com/alexflint/go-arg"
 
 	"ms/xox/internal"
-	"ms/xox/models"
-
 	"github.com/knq/dburl"
 
 	//_ "ms/xox/loaders"
@@ -74,7 +72,7 @@ func main() {
 	}
 
 	// add xo
-	err = args.ExecuteTemplate(internal.XOTemplate, "xo_db", "", args)
+	err = internal.ExecuteTemplate(internal.XOTemplate, "xo_db", "", args)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
@@ -191,7 +189,7 @@ func processArgs(args *internal.ArgType) error {
 
 	// if verbose
 	if args.Verbose {
-		models.XOLog = func(s string, p ...interface{}) {
+        internal.XOLog = func(s string, p ...interface{}) {
 			fmt.Printf("SQL:\n%s\nPARAMS:\n%v\n\n", s, p)
 		}
 	}
@@ -282,7 +280,7 @@ func getFile(args *internal.ArgType, t *internal.TBuf_OutputToFileHolder) (*os.F
 		}
 
 		// execute
-		err = args.TemplateSet().Execute(f, "xo_package.go.tpl", args)
+		err = internal.GetTemplateSet().Execute(f, "xo_package.go.tpl", args)
 		if err != nil {
 			return nil, err
 		}

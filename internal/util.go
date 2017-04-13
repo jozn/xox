@@ -19,8 +19,8 @@ import (
 // "%%<name> <type>[,<option>,...]%%", replacing them with the supplied mask.
 // mask can contain "%d" to indicate current position. The modified query is
 // returned, and the slice of extracted QueryParam's.
-func (a *ArgType) ParseQuery(mask string, interpol bool) (string, []*QueryParam) {
-	dl := a.QueryParamDelimiter
+func ParseQuery(mask string, interpol bool) (string, []*QueryParam) {
+	dl := c.QueryParamDelimiter
 
 	// create the regexp for the delimiter
 	placeholderRE := regexp.MustCompile(
@@ -28,7 +28,7 @@ func (a *ArgType) ParseQuery(mask string, interpol bool) (string, []*QueryParam)
 	)
 
 	// grab matches from query string
-	matches := placeholderRE.FindAllStringIndex(a.Query, -1)
+	matches := placeholderRE.FindAllStringIndex(c.Query, -1)
 
 	// return vals and placeholders
 	str := ""
@@ -45,7 +45,7 @@ func (a *ArgType) ParseQuery(mask string, interpol bool) (string, []*QueryParam)
 		}
 
 		// extract parameter info
-		paramStr := a.Query[m[0]+len(dl) : m[1]-len(dl)]
+		paramStr := c.Query[m[0]+len(dl) : m[1]-len(dl)]
 		p := strings.SplitN(paramStr, " ", 2)
 		param := &QueryParam{
 			Name: p[0],
@@ -59,7 +59,7 @@ func (a *ArgType) ParseQuery(mask string, interpol bool) (string, []*QueryParam)
 			for _, opt := range opts[1:] {
 				switch opt {
 				case "interpolate":
-					if !a.QueryInterpolate {
+					if !c.QueryInterpolate {
 						panic("query interpolate is not enabled")
 					}
 					param.Interpolate = true
@@ -71,7 +71,7 @@ func (a *ArgType) ParseQuery(mask string, interpol bool) (string, []*QueryParam)
 		}
 
 		// add to string
-		str = str + a.Query[last:m[0]]
+		str = str + c.Query[last:m[0]]
 		if interpol && param.Interpolate {
 			// handle interpolation case
 			xstr := `fmt.Sprintf("%v", ` + param.Name + `)`
@@ -89,7 +89,7 @@ func (a *ArgType) ParseQuery(mask string, interpol bool) (string, []*QueryParam)
 	}
 
 	// add part of query remains
-	str = str + a.Query[last:]
+	str = str + c.Query[last:]
 
 	return str, params
 }
@@ -103,7 +103,7 @@ var PrecScaleRE = regexp.MustCompile(`\(([0-9]+)(\s*,[0-9]+)?\)$`)
 
 // ParsePrecision extracts (precision[,scale]) strings from a data type and
 // returns the data type without the string.
-func (a *ArgType) ParsePrecision(dt string) (string, int, int) {
+func ParsePrecision(dt string) (string, int, int) {
 	var err error
 
 	precision := -1
@@ -159,7 +159,7 @@ func fmtIndexName(ixName string, tableName string) string {
 
 // BuildIndexFuncName builds the index func name for an index and its supplied
 // fields.
-func (a *ArgType) BuildIndexFuncName(ixTpl *Index) {
+func BuildIndexFuncName(ixTpl *Index) {
 	// build func name
 	funcName := ixTpl.Type.Name
 	if !ixTpl.Index.IsUnique {
@@ -171,7 +171,7 @@ func (a *ArgType) BuildIndexFuncName(ixTpl *Index) {
 	paramNames := []string{}
 
 	ixName := fmtIndexName(ixTpl.Index.IndexName, ixTpl.Type.Table.TableName)
-	if a.UseIndexNames && ixName != "" {
+	if c.UseIndexNames && ixName != "" {
 		paramNames = append(paramNames, ixName)
 	} else {
 		for _, f := range ixTpl.Fields {
