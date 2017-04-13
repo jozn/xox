@@ -36,7 +36,7 @@ func GetTemplateSet() *TemplateSet {
 // ExecuteTemplate loads and parses the supplied template with name and
 // executes it with obj as the context.
 //me: tableName is table or views
-func ExecuteTemplate(tt TemplateType, tableNameOrOutFileName string, sub string, obj interface{}) error {
+func ExecuteTemplate(tt TemplateType, nameOfOutPutFile string, sub string, obj interface{}) error {
 	var err error
 
 	//fmt.Println("****** ", tableName)
@@ -46,11 +46,15 @@ func ExecuteTemplate(tt TemplateType, tableNameOrOutFileName string, sub string,
 		c.Generated = []TBuf_OutputToFileHolder{}
 	}
 
+    //me
+    if nameOfOutPutFile[0] != 'z'{
+        nameOfOutPutFile ="z_" + nameOfOutPutFile
+    }
 	// create store
 	v := TBuf_OutputToFileHolder{
 		TemplateType: tt,
-		Name:         tableNameOrOutFileName, // table name: Post, User
-		Subname:      sub,                    // ex: index name
+		Name:         nameOfOutPutFile, // table name: Post, User
+		Subname:      sub,                     // ex: index name
 		Buf:          new(bytes.Buffer),
 	}
 
