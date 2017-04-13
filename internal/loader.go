@@ -795,6 +795,10 @@ func (tl TypeLoader) XLoadEvents(args *ArgType, tableMap map[string]*Type) error
 
 func (tl TypeLoader) XLoadCaches(args *ArgType, tableMap map[string]*Type) error {
 	for _, table := range tableMap {
+        if table.Table.TableName == "post"{
+            //fmt.Println("#######",table.Table.TableName ," ",table.Name)
+            //continue
+        }
 		//err := ExecuteTemplate(XCacheTemplate, "cache_"+ table.Name, "", table)
 		err := ExecuteTemplate(XCacheTemplate, "zz_cache", "", table)
 		if err != nil {

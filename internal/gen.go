@@ -85,7 +85,7 @@ func Gen() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%+v", args)
+	//fmt.Printf("%+v", args)
 }
 
 //me: just configs - skip it
@@ -273,6 +273,7 @@ func getFile(args *ArgType, t *TBuf_OutputToFileHolder) (*os.File, error) {
 	}
 
 	// file didn't originally exist, so add package header
+    //me:writes header to each file
 	if fi == nil || !args.Append {
 		// add build tags
 		if args.Tags != "" {
@@ -296,7 +297,7 @@ func getFile(args *ArgType, t *TBuf_OutputToFileHolder) (*os.File, error) {
 func writeTypes(args *ArgType) error {
 	var err error
 
-	fmt.Println("args.Generated: ", args.Generated)
+	//fmt.Println("args.Generated: ", args.Generated)
 	out := TBufSlice(args.Generated)
 
 	// sort segments
