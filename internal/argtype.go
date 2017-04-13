@@ -156,7 +156,7 @@ func NewDefaultArgs_MS() *ArgType {
 	c = &ArgType{
 		Suffix:              ".z.go",
 		Int32Type:           "int",
-		Uint32Type:          "uint",
+		Uint32Type:          "int",
 		ForeignKeyMode:      &fkMode,
 		QueryParamDelimiter: "%%",
 		NameConflictSuffix:  "Val",

@@ -8,7 +8,7 @@
 {{- end }}
 
 // Manualy copy this to project
-type {{ .Name }} struct {
+type {{ .Name }}__ struct {
 {{- range .Fields }}
 	{{ .Col.ColumnName }} {{ retype .Type }} `json:"{{ .Col.ColumnName }}"` // {{ .Col.ColumnName }} -
 {{- end }}

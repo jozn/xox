@@ -57,10 +57,10 @@ func GenProccess() error {
 		return err
 	}
 
-    err = tl.XModelsTypes(c, tableMap)
+    /*err = tl.XModelsTypes(c, tableMap)
     if err != nil {
         return err
-    }
+    }*/
 
     return nil
 }

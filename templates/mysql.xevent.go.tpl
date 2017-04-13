@@ -1,7 +1,7 @@
 {{- $short := (shortname .Name "err" "res" "sqlstr" "db" "XOLog") -}}
 {{- $table := (schema .Schema .Table.TableName) -}}
 {{- $typ := .Name }}
-{{- $_ := "__" }}
+{{- $_ := "" }}
 
 {{/* - * (Manually copy this to other location) */}}
 //{{ .Name }} Events 

@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
+	_ "os/exec"
 	"path"
 	"sort"
 	"strings"
@@ -351,5 +351,6 @@ func writeTypes(args *ArgType) error {
 	}
 
 	// process written files with goimports
-	return exec.Command("goimports", params...).Run()
+	//return exec.Command("goimports", params...).Run()
+    return nil
 }
