@@ -129,8 +129,8 @@ type ArgType struct {
 	// LoaderType is the loader type.
 	LoaderType string `arg:"-"`
 
-	// Loader is the schema loader.
-	Loader Loader `arg:"-"`
+	// Loader is the schema loader.//me: like mysql, or postgresql
+	Loader TypeLoader `arg:"-"`
 
 	// DB is the opened database handle.
 	DB *sql.DB `arg:"-"`

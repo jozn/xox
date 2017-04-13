@@ -24,7 +24,11 @@ import (
 	_ "github.com/jozn/xoutil"
 )
 
-func main() {
+func main()  {
+    internal.Gen()
+
+}
+func main2() {
 	var err error
 
 	// get defaults

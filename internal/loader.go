@@ -38,7 +38,7 @@ type Loader interface {
 }
 
 // SchemaLoaders are the available schema loaders.
-var SchemaLoaders = map[string]Loader{}
+var SchemaLoaders = map[string]TypeLoader{}
 
 // TypeLoader provides a common Loader implementation used by the built in
 // schema/query loaders.
@@ -287,6 +287,12 @@ func (tl TypeLoader) LoadSchema(args *ArgType) error {
 	if err != nil {
 		return err
 	}
+
+    //Me:
+    err = tl.XLoadEvents(args, tableMap)
+    if err != nil {
+        return err
+    }
 
 	return nil
 }
@@ -767,4 +773,20 @@ func (tl TypeLoader) LoadIndexColumns(args *ArgType, ixTpl *Index) error {
 	}
 
 	return nil
+}
+
+//////////////////////////////// By ME //////////////////
+
+// LoadIndexColumns loads the index column information.
+func (tl TypeLoader) XLoadEvents(args *ArgType, tableMap map[string]*Type) ( error) {
+    for _, table := range tableMap {
+        // load table indexes
+        //err = tl.LoadTableIndexes(args, table, indexMap)
+        err := ExecuteTemplate(XEvent, table.Name, "", table)
+        if err != nil {
+             return err
+        }
+    }
+
+    return  nil
 }
