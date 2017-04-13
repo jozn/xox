@@ -13,10 +13,10 @@ const (
 	QueryTypeTemplate
 	QueryTemplate
 
-    //Me
-    XEvent
-    XCache
-    ////
+	//Me
+	XEventTemplate
+	XCacheTemplate
+	////
 
 	// always last
 	XOTemplate
@@ -43,12 +43,12 @@ func (tt TemplateType) String() string {
 	case QueryTemplate:
 		s = "query"
 
-    //me
-    case XEvent:
-        s = "xevent"
-    case XCache:
-        s = "xcache"
-    /////////////
+	//me
+	case XEventTemplate:
+		s = "xevent"
+	case XCacheTemplate:
+		s = "xcache"
+		/////////////
 	default:
 		panic("unknown TemplateType")
 	}

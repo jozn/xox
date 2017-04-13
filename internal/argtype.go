@@ -153,7 +153,7 @@ type ArgType struct {
 func NewDefaultArgs_MS() *ArgType {
 	fkMode := FkModeSmart
 
-	c= &ArgType{
+	c = &ArgType{
 		Suffix:              ".z.go",
 		Int32Type:           "int",
 		Uint32Type:          "uint",
@@ -204,7 +204,7 @@ func NewDefaultArgs_MS() *ArgType {
 			"StringSlice": "ss",
 		},
 	}
-    return c
+	return c
 }
 
 // NewDefaultArgs returns the default arguments.

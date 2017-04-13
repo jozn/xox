@@ -4,7 +4,7 @@ import (
 	"ms/xox/internal"
 )
 
-func main()  {
-    internal.Gen()
+func main() {
+	internal.Gen()
 
 }

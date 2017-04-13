@@ -31,11 +31,11 @@ type Loader interface {
 
 	// ParseQuery parses the ArgType.Query and writes any necessary type(s) to
 	// the ArgType from the opened database handle.
-	ParseQuery(*ArgType) error
+	ParseQuery(*ArgType) error //me:dep
 
 	// LoadSchema loads the ArgType.Schema from the opened database handle,
 	// writing any generated types to ArgType.
-	LoadSchema(*ArgType) error
+	LoadSchema(*ArgType) error //Me: dep
 }
 
 // SchemaLoaders are the available schema loaders.
@@ -165,12 +165,12 @@ func (tl TypeLoader) ParseQuery(args *ArgType) error {
 		}
 
 		// process columns
-		for _, c := range colList {
+		for _, col := range colList {
 			f := &Field{
-				Name: snaker.SnakeToCamelIdentifier(c.ColumnName),
-				Col:  c,
+				Name: snaker.SnakeToCamelIdentifier(col.ColumnName),
+				Col:  col,
 			}
-			f.Len, f.NilType, f.Type = tl.ParseType(args, c.DataType, false)
+			f.Len, f.NilType, f.Type = tl.ParseType(args, col.DataType, false)
 			typeTpl.Fields = append(typeTpl.Fields, f)
 		}
 	} else {
@@ -245,6 +245,7 @@ func (tl TypeLoader) ParseQuery(args *ArgType) error {
 }
 
 // LoadSchema loads schema definitions.
+/*
 func (tl TypeLoader) LoadSchema(args *ArgType) error {
 	var err error
 
@@ -297,6 +298,7 @@ func (tl TypeLoader) LoadSchema(args *ArgType) error {
 
 	return nil
 }
+*/
 
 // LoadEnums loads schema enums.
 func (tl TypeLoader) LoadEnums(args *ArgType) (map[string]*Enum, error) {
@@ -513,11 +515,11 @@ func (tl TypeLoader) LoadColumns(args *ArgType, typeTpl *Type) error {
 	}
 
 	// process columns
-	for _, c := range columnList {
+	for _, col := range columnList {
 		ignore := false
 
 		for _, ignoreField := range args.IgnoreFields {
-			if ignoreField == c.ColumnName {
+			if ignoreField == col.ColumnName {
 				// Skip adding this field if user has specified they are not
 				// interested.
 				//
@@ -534,13 +536,13 @@ func (tl TypeLoader) LoadColumns(args *ArgType, typeTpl *Type) error {
 
 		// set col info
 		f := &Field{
-			Name: snaker.SnakeToCamelIdentifier(c.ColumnName),
-			Col:  c,
+			Name: snaker.SnakeToCamelIdentifier(col.ColumnName),
+			Col:  col,
 		}
-		f.Len, f.NilType, f.Type = tl.ParseType(args, c.DataType, !c.NotNull)
+		f.Len, f.NilType, f.Type = tl.ParseType(args, col.DataType, !col.NotNull)
 
 		// set primary key
-		if c.IsPrimaryKey && len(columnList) > 1 {
+		if col.IsPrimaryKey && len(columnList) > 1 {
 			typeTpl.PrimaryKey = f
 		}
 
@@ -779,15 +781,28 @@ func (tl TypeLoader) LoadIndexColumns(args *ArgType, ixTpl *Index) error {
 //////////////////////////////// By ME //////////////////
 
 // LoadIndexColumns loads the index column information.
-func (tl TypeLoader) XLoadEvents(args *ArgType, tableMap map[string]*Type) ( error) {
-    for _, table := range tableMap {
-        // load table indexes
-        //err = tl.LoadTableIndexes(args, table, indexMap)
-        err := ExecuteTemplate(XEvent, table.Name, "", table)
-        if err != nil {
-             return err
-        }
-    }
+func (tl TypeLoader) XLoadEvents(args *ArgType, tableMap map[string]*Type) error {
+	for _, table := range tableMap {
+		// load table indexes
+		//err = tl.LoadTableIndexes(args, table, indexMap)
+		err := ExecuteTemplate(XEventTemplate, table.Name, "", table)
+		if err != nil {
+			return err
+		}
+	}
 
-    return  nil
+	return nil
+}
+
+func (tl TypeLoader) XLoadCaches(args *ArgType, tableMap map[string]*Type) error {
+	for _, table := range tableMap {
+		// load table indexes
+		//err = tl.LoadTableIndexes(args, table, indexMap)
+		err := ExecuteTemplate(XCacheTemplate, table.Name, "", table)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

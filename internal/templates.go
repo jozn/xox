@@ -7,14 +7,13 @@ import (
 	"io/ioutil"
 	"path"
 	"text/template"
-
 )
 
 // TemplateLoader loads templates from the specified name.
 func TemplateLoader(name string) ([]byte, error) {
 	// no template path specified
 	if c.TemplatePath == "" {
-        return ioutil.ReadFile(path.Join("./templates/", name))
+		return ioutil.ReadFile(path.Join("./templates/", name))
 		//return templates.Asset(name)
 	}
 
