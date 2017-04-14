@@ -825,11 +825,23 @@ func (tl TypeLoader) XSamplePB(args *ArgType, tableMap map[string]*Type) error {
 	return nil
 }
 
+var notMakeTableType = []string{"user"}
+
+func skipTableModel(table string) bool {
+    t := strings.ToLower(table)
+    for _,ent :=range notMakeTableType{
+        if ent == t{
+            return true
+        }
+    }
+    return false
+}
+
 func (tl TypeLoader) XModelsTypes(args *ArgType, tableMap map[string]*Type) error {
 	for _, table := range tableMap {
-		if table.Table.TableName == "post" {
+		if skipTableModel(table.Name) {
 			//fmt.Println("#######",table.Table.TableName ," ",table.Name)
-			//continue
+			continue
 		}
 		//err := ExecuteTemplate(XCacheTemplate, "cache_"+ table.Name, "", table)
 		err := ExecuteTemplate(XModeLTypeTemplate, "zz_models", "", table)
