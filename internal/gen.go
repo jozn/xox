@@ -11,7 +11,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"sort"
 	"strings"
 
 	"github.com/alexflint/go-arg"
@@ -21,6 +20,7 @@ import (
 	//_ "ms/xox/loaders"
 
 	_ "github.com/jozn/xoutil"
+    "sort"
 )
 
 func Gen() {
@@ -301,7 +301,8 @@ func writeTypes(args *ArgType) error {
 	out := TBufSlice(args.Generated)
 
 	// sort segments
-	sort.Sort(out)
+	sort.Stable(out)
+	//sort.Sort(out)
 
 	// loop, writing in order
 	for _, t := range out {

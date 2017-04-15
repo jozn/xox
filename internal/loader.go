@@ -8,6 +8,7 @@ import (
 	"github.com/gedex/inflector"
 
 	"ms/xox/snaker"
+	"sort"
 )
 
 // Loader is the common interface for database drivers that can generate code
@@ -490,7 +491,7 @@ func (tl TypeLoader) LoadRelkind(args *ArgType, relType RelType) (map[string]*Ty
 			return nil, err
 		}
 
-		tableMap[ti.TableName] = typeTpl
+		tableMap[strings.ToLower(ti.TableName)] = typeTpl
 	}
 
 	// generate table templates
@@ -828,23 +829,33 @@ func (tl TypeLoader) XSamplePB(args *ArgType, tableMap map[string]*Type) error {
 var notMakeTableType = []string{"user"}
 
 func skipTableModel(table string) bool {
-    t := strings.ToLower(table)
-    for _,ent :=range notMakeTableType{
-        if ent == t{
-            return true
-        }
-    }
-    return false
+	t := strings.ToLower(table)
+	for _, ent := range notMakeTableType {
+		if ent == t {
+			return true
+		}
+	}
+	return false
 }
 
 func (tl TypeLoader) XModelsTypes(args *ArgType, tableMap map[string]*Type) error {
-	for _, table := range tableMap {
+	tbls := []string{}
+
+	for k, table := range tableMap {
 		if skipTableModel(table.Name) {
+
 			//fmt.Println("#######",table.Table.TableName ," ",table.Name)
 			continue
 		}
+		tbls = append(tbls, k)
 		//err := ExecuteTemplate(XCacheTemplate, "cache_"+ table.Name, "", table)
-		err := ExecuteTemplate(XModeLTypeTemplate, "zz_models", "", table)
+	}
+
+	sort.Strings(tbls)
+	for _, k := range tbls {
+        //print(k)
+        //print("\n")
+		err := ExecuteTemplate(XModeLTypeTemplate, "zz_models", "", tableMap[k])
 		if err != nil {
 			return err
 		}
