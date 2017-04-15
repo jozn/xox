@@ -14,6 +14,7 @@ func {{ .Name }}(db XODB{{ goparamlist .Params true true }}) ({{ if $notVoid }}{
 	XOLog(sqlstr{{ goparamlist .Params true false }})
 	err = db.QueryRow(sqlstr{{ goparamlist .Params true false }}).Scan(&ret)
 	if err != nil {
+		XOLogErr(err)
 		return {{ reniltype .Return.NilType }}, err
 	}
 

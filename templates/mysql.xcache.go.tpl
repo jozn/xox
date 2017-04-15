@@ -16,6 +16,7 @@ func (c _StoreImpl) Get{{ .Name }}By{{$id}}{{$_}} ({{$id}} int) (*{{ .Name }},bo
 	if err == nil {
 		return obj2, true
 	}
+	XOLogErr(err)
 	return nil, false
 }
 

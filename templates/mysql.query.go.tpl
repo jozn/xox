@@ -18,6 +18,7 @@ func {{ .Name }} (db XODB{{ range .QueryParams }}, {{ .Name }} {{ .Type }}{{ end
 	var {{ $short }} {{ .Type.Name }}
 	err = db.QueryRow(sqlstr{{ range .QueryParams }}, {{ .Name }}{{ end }}).Scan({{ fieldnames .Type.Fields (print "&" $short) }})
 	if err != nil {
+		XOLogErr(err)
 		return nil, err
 	}
 
@@ -25,6 +26,7 @@ func {{ .Name }} (db XODB{{ range .QueryParams }}, {{ .Name }} {{ .Type }}{{ end
 {{- else }}
 	q, err := db.Query(sqlstr{{ range .QueryParams }}, {{ .Name }}{{ end }})
 	if err != nil {
+		XOLogErr(err)
 		return nil, err
 	}
 	defer q.Close()
@@ -37,6 +39,7 @@ func {{ .Name }} (db XODB{{ range .QueryParams }}, {{ .Name }} {{ .Type }}{{ end
 		// scan
 		err = q.Scan({{ fieldnames .Type.Fields (print "&" $short) }})
 		if err != nil {
+			XOLogErr(err)
 			return nil, err
 		}
 

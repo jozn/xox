@@ -23,6 +23,7 @@ func {{ .FuncName }}(db XODB{{ goparamlist .Fields true true }}) ({{ if not .Ind
 
 	err = db.QueryRow(sqlstr{{ goparamlist .Fields true false }}).Scan({{ fieldnames .Type.Fields (print "&" $short) }})
 	if err != nil {
+		XOLogErr(err)
 		return nil, err
 	}
 
@@ -32,6 +33,7 @@ func {{ .FuncName }}(db XODB{{ goparamlist .Fields true true }}) ({{ if not .Ind
 {{- else }}
 	q, err := db.Query(sqlstr{{ goparamlist .Fields true false }})
 	if err != nil {
+		XOLogErr(err)
 		return nil, err
 	}
 	defer q.Close()
@@ -48,6 +50,7 @@ func {{ .FuncName }}(db XODB{{ goparamlist .Fields true true }}) ({{ if not .Ind
 		// scan
 		err = q.Scan({{ fieldnames .Type.Fields (print "&" $short) }})
 		if err != nil {
+			XOLogErr(err)
 			return nil, err
 		}
 
