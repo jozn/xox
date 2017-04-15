@@ -20,6 +20,16 @@ var XOLog = func(strings ...interface{}) {
 	}
  }
 
+ var XOLogErr = func(err error) {
+    if config.IS_DEBUG && err!= nil{
+        if _sqlLogFile == nil {
+            _sqlLogFile, _ = os.OpenFile("./logs/sql_"+helper.IntToStr(helper.TimeNow())+".sql", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+        }
+        _sqlLogFile.Sync()
+    }
+}
+
+
 // ScannerValuer is the common interface for types that implement both the
 // database/sql.Scanner and sql/driver.Valuer interfaces.
 type ScannerValuer interface {

@@ -69,12 +69,14 @@ func ({{ $short }} *{{ .Name }}) Insert(db XODB) error {
 	XOLog(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }})
 	res, err := db.Exec(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }})
 	if err != nil {
+		XOLogErr(err)
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
+		XOLogErr(err)
 		return err
 	}
 
@@ -103,12 +105,14 @@ func ({{ $short }} *{{ .Name }}) Replace(db XODB) error {
 	XOLog(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }})
 	res, err := db.Exec(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }})
 	if err != nil {
+		XOLogErr(err)
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
+		XOLogErr(err)
 		return err
 	}
 
@@ -144,6 +148,7 @@ func ({{ $short }} *{{ .Name }}) Update(db XODB) error {
 	XOLog(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }}, {{ $short }}.{{ .PrimaryKey.Name }})
 	_, err = db.Exec(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }}, {{ $short }}.{{ .PrimaryKey.Name }})
 
+	XOLogErr(err)
 	On{{ .Name }}_AfterUpdate({{ $short }})
 
 	return err
@@ -179,6 +184,7 @@ func ({{ $short }} *{{ .Name }}) Delete(db XODB) error {
 	XOLog(sqlstr, {{ $short }}.{{ .PrimaryKey.Name }})
 	_, err = db.Exec(sqlstr, {{ $short }}.{{ .PrimaryKey.Name }})
 	if err != nil {
+		XOLogErr(err)
 		return err
 	}
 
@@ -491,6 +497,7 @@ func (u *{{$selectorType}}) GetRow (db *sqlx.DB) (*{{ $typ }},error) {
 	//by Sqlx
 	err = db.Get(row ,sqlstr, whereArgs...)
 	if err != nil {
+		XOLogErr(err)
 		return nil, err
 	}
 
@@ -512,6 +519,7 @@ func (u *{{$selectorType}}) GetRows (db *sqlx.DB) ([]*{{ $typ }},error) {
 	//by Sqlx
 	err = db.Unsafe().Select(&rows ,sqlstr, whereArgs...)
 	if err != nil {
+		XOLogErr(err)
 		return nil, err
 	}
 
@@ -540,6 +548,7 @@ func (u *{{$selectorType}}) GetRows2 (db *sqlx.DB) ([]{{ $typ }},error) {
 	//by Sqlx
 	err = db.Unsafe().Select(&rows ,sqlstr, whereArgs...)
 	if err != nil {
+		XOLogErr(err)
 		return nil, err
 	}
 
@@ -575,6 +584,7 @@ func (u *{{$selectorType}}) GetString (db *sqlx.DB) (string,error) {
 	//by Sqlx
 	err = db.Get(&res ,sqlstr, whereArgs...)
 	if err != nil {
+		XOLogErr(err)
 		return "", err
 	}
 
@@ -592,6 +602,7 @@ func (u *{{$selectorType}}) GetStringSlice (db *sqlx.DB) ([]string,error) {
 	//by Sqlx
 	err = db.Select(&rows ,sqlstr, whereArgs...)
 	if err != nil {
+		XOLogErr(err)
 		return nil, err
 	}
 
@@ -609,6 +620,7 @@ func (u *{{$selectorType}}) GetIntSlice (db *sqlx.DB) ([]int,error) {
 	//by Sqlx
 	err = db.Select(&rows ,sqlstr, whereArgs...)
 	if err != nil {
+		XOLogErr(err)
 		return nil, err
 	}
 
@@ -626,6 +638,7 @@ func (u *{{$selectorType}}) GetInt (db *sqlx.DB) (int,error) {
 	//by Sqlx
 	err = db.Get(&res ,sqlstr, whereArgs...)
 	if err != nil {
+		XOLogErr(err)
 		return 0, err
 	}
 
@@ -659,11 +672,13 @@ func (u *{{$updaterType}})Update (db XODB) (int,error) {
     XOLog(sqlstr,allArgs)
     res, err := db.Exec(sqlstr, allArgs...)
     if err != nil {
+    	XOLogErr(err)
         return 0,err
     }
 
     num, err := res.RowsAffected()
     if err != nil {
+    	XOLogErr(err)
         return 0,err
     }
 
@@ -689,12 +704,14 @@ func (d *{{$deleterType}})Delete (db XODB) (int,error) {
     XOLog(sqlstr, args)
     res, err := db.Exec(sqlstr, args...)
     if err != nil {
+    	XOLogErr(err)
         return 0,err
     }
 
     // retrieve id
     num, err := res.RowsAffected()
     if err != nil {
+    	XOLogErr(err)
         return 0,err
     }
 
@@ -725,6 +742,7 @@ func MassInsert_{{ .Name }}(rows []{{ .Name }} ,db XODB) error {
 
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
+		XOLogErr(err)
 		return err
 	}
 	
@@ -754,6 +772,7 @@ func MassReplace_{{ .Name }}(rows []{{ .Name }} ,db XODB) error {
 
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
+		XOLogErr(err)
 		return err
 	}
 	
