@@ -4,17 +4,14 @@
 {{- if .Comment -}}
 // {{ .Comment }}
 {{- else -}}
-// {{ .Name }} represents a row from '{{ $table }}'.
+// {{ .Name }} '{{ $table }}'.
 {{- end }}
-
-// Manualy copy this to project
 type {{ .Name }} struct {
 {{- range .Fields }}
-	{{ .Col.ColumnName }} {{ retype .Type }}// `json:"{{ .Col.ColumnName }}"` // {{ .Col.ColumnName }} -
+	{{ .Col.ColumnName }} {{ retype .Type }} {{/* `json:"{{ .Col.ColumnName }}"` // {{ .Col.ColumnName }} */}}
 {{- end }}
 {{- if .PrimaryKey }}
-
-	// xo fields
+	{{/* // xox fields */}}
 	_exists, _deleted bool
 {{ end }}
 }
