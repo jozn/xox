@@ -48,6 +48,25 @@ func ms_to_slice(typ ...string) []string {
 	return typ
 }
 
+func ms_col_comment_json(comment string) string {
+    fmt.Println( comment)
+    arr := strings.Split(strings.ToLower(comment),",")
+    for _,s := range arr{
+        //fmt.Println(s, comment)
+        if "nojson" == strings.Trim(s," "){
+            return "`json:\"-\"`"
+        }
+    }
+    return ""
+}
+
+func ms_col_comment_raw(comment string) string {
+    if strings.Trim(comment," ") != ""{
+        return "//"+comment
+    }
+    return ""
+}
+
 func ms_append_fieldnames(fields []*Field, slice string, ignoreNames ...string) string {
 	ignore := map[string]bool{}
 	for _, n := range ignoreNames {

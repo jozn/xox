@@ -276,6 +276,19 @@ func (u *{{$operationType}}) {{ $colName }}_In (ins []int) *{{$operationType}} {
     return u
 }
 
+func (u *{{$operationType}}) {{ $colName }}_Ins (ins ...int) *{{$operationType}} {
+    w := whereClause{}
+    var insWhere []interface{}
+    for _, i:= range ins {
+        insWhere = append(insWhere,i)
+    }
+    w.args = insWhere
+    w.condition = " {{ $colName }} IN("+helper.DbQuestionForSqlIn(len(ins))+") "
+    u.wheres = append(u.wheres, w)
+
+    return u
+}
+
 func (u *{{$operationType}}) {{ $colName }}_NotIn (ins []int) *{{$operationType}} {
     w := whereClause{}
     var insWhere []interface{}

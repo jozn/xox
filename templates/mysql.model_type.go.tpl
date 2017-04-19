@@ -8,7 +8,7 @@
 {{- end }}
 type {{ .Name }} struct {
 {{- range .Fields }}
-	{{ .Col.ColumnName }} {{ retype .Type }} {{/* `json:"{{ .Col.ColumnName }}"` // {{ .Col.ColumnName }} */}}
+	{{ .Col.ColumnName }} {{ retype .Type }} {{ ms_col_comment_json .Comment }} {{ ms_col_comment_raw .Comment }}      {{/* `json:"{{ .Col.ColumnName }}"` // {{ .Col.ColumnName }} */}}
 {{- end }}
 {{- if .PrimaryKey }}
 	{{/* // xox fields */}}

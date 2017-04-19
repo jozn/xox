@@ -539,6 +539,7 @@ func (tl TypeLoader) LoadColumns(args *ArgType, typeTpl *Type) error {
 		f := &Field{
 			Name: snaker.SnakeToCamelIdentifier(col.ColumnName),
 			Col:  col,
+            Comment: col.Comment,
 		}
 		f.Len, f.NilType, f.Type = tl.ParseType(args, col.DataType, !col.NotNull)
 

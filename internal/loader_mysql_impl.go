@@ -11,7 +11,8 @@ func MyTableColumns(db XODB, schema string, table string) ([]*Column_Impl, error
 		`IF(data_type = 'enum', column_name, column_type) AS data_type, ` +
 		`IF(is_nullable = 'YES', false, true) AS not_null, ` +
 		`column_default AS default_value, ` +
-		`IF(column_key = 'PRI', true, false) AS is_primary_key ` +
+		`IF(column_key = 'PRI', true, false) AS is_primary_key, ` +
+		`COLUMN_COMMENT ` +
 		`FROM information_schema.columns ` +
 		`WHERE table_schema = ? AND table_name = ? ` +
 		`ORDER BY ordinal_position`
@@ -30,7 +31,7 @@ func MyTableColumns(db XODB, schema string, table string) ([]*Column_Impl, error
 		c := Column_Impl{}
 
 		// scan
-		err = q.Scan(&c.FieldOrdinal, &c.ColumnName, &c.DataType, &c.NotNull, &c.DefaultValue, &c.IsPrimaryKey)
+		err = q.Scan(&c.FieldOrdinal, &c.ColumnName, &c.DataType, &c.NotNull, &c.DefaultValue, &c.IsPrimaryKey, &c.Comment)
 		if err != nil {
 			return nil, err
 		}

@@ -25,6 +25,7 @@ var XOLog = func(strings ...interface{}) {
         if _sqlLogFile == nil {
             _sqlLogFile, _ = os.OpenFile("./logs/sql_"+helper.IntToStr(helper.TimeNow())+".sql", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
         }
+        _sqlLogFile.WriteString(fmt.Sprintf("=== %v\n",err))
         _sqlLogFile.Sync()
     }
 }
