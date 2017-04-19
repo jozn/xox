@@ -62,5 +62,10 @@ func GenProccess() error {
 		return err
 	}
 
+    err = tl.XCacheIndex(c, tableMap)
+    if err != nil {
+        return err
+    }
+
 	return nil
 }

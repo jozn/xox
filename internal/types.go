@@ -18,6 +18,7 @@ const (
 	XCacheTemplate
 	XPBTemplate
 	XModeLTypeTemplate
+    XCacheIndexTemplate
 	////
 
 	// always last
@@ -54,6 +55,8 @@ func (tt TemplateType) String() string {
 		s = "xpb"
 	case XModeLTypeTemplate:
 		s = "model_type"
+    case XCacheIndexTemplate:
+        s = "xcache_index"
 
 		/////////////
 	default:

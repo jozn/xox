@@ -49,7 +49,7 @@ func ms_to_slice(typ ...string) []string {
 }
 
 func ms_col_comment_json(comment string) string {
-    fmt.Println( comment)
+    //fmt.Println( comment)
     arr := strings.Split(strings.ToLower(comment),",")
     for _,s := range arr{
         //fmt.Println(s, comment)

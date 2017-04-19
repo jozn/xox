@@ -864,3 +864,27 @@ func (tl TypeLoader) XModelsTypes(args *ArgType, tableMap map[string]*Type) erro
 
 	return nil
 }
+
+func (tl TypeLoader) XCacheIndex(args *ArgType, tableMap map[string]*Type) error {
+
+    var err error
+
+    indexMap := map[string]*Index{}
+    for _, table := range tableMap {
+        // load table indexes
+        err = tl.LoadTableIndexes(args, table, indexMap)
+        if err != nil {
+            return  err
+        }
+    }
+
+    // generate templates
+    for _, index := range indexMap {
+        err = ExecuteTemplate(XCacheIndexTemplate, "zz_cache_index", "", index)
+        if err != nil {
+            return err
+        }
+    }
+
+    return  nil
+}
