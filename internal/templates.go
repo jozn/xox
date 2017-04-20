@@ -75,6 +75,28 @@ func ExecuteTemplate(tt TemplateType, nameOfOutPutFile string, sub string, obj i
 	return nil
 }
 
+func ExecuteJavaJsonTemplate(obj interface{}) error {
+    var err error
+
+    // create store
+    v := TBuf_OutputToFileHolder{
+        TemplateType: XModeLTypeJavaJsonTemplate,
+        Name:         "j", // j.java
+        Subname:      "",
+        Buf:          new(bytes.Buffer),
+    }
+
+    templateName := fmt.Sprintf("%s.java", XModeLTypeJavaJsonTemplate.String() )
+
+    // execute template
+    err = GetTemplateSet().Execute(v.Buf, templateName, obj)
+    if err != nil {
+        return err
+    }
+
+    c.GeneratedJavaJson = v
+    return nil
+}
 // TemplateSet is a set of templates.
 type TemplateSet struct {
 	funcs template.FuncMap
@@ -90,12 +112,14 @@ func (ts *TemplateSet) Execute(w io.Writer, name string, obj interface{}) error 
 		// attempt to load and parse the template
 		buf, err := ts.l(name)
 		if err != nil {
+            ErrLog(err)
 			return err
 		}
 
 		// parse template
 		tpl, err = template.New(name).Funcs(ts.funcs).Parse(string(buf))
 		if err != nil {
+            ErrLog(err)
 			return err
 		}
 	}

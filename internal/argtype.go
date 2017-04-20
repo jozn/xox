@@ -140,6 +140,7 @@ type ArgType struct {
 
 	// Generated is the generated templates after a run.
 	Generated []TBuf_OutputToFileHolder `arg:"-"`
+	GeneratedJavaJson TBuf_OutputToFileHolder `arg:"-"`
 
 	// KnownTypeMap is the collection of known Go types.
 	KnownTypeMap map[string]bool `arg:"-"`

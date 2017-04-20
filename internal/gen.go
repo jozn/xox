@@ -78,6 +78,13 @@ func Gen() {
 		os.Exit(1)
 	}
 
+    // output
+    err = writeTypesJavaJson(args)
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "error: %v\n", err)
+        os.Exit(1)
+    }
+
 	// output
 	err = writeTypes(args)
 	if err != nil {
@@ -355,3 +362,34 @@ func writeTypes(args *ArgType) error {
 	return exec.Command("goimports", params...).Run()
 	//return nil
 }
+
+// writeTypes writes the generated definitions.
+func writeTypesJavaJson(args *ArgType) error {
+    var err error
+    var f *os.File
+
+    // check if generated template is only whitespace/empty
+    bufStr := strings.TrimSpace(args.GeneratedJavaJson.Buf.String())
+    if len(bufStr) == 0 {
+        ErrLog(err)
+        return nil
+    }
+
+    filename := path.Join(args.Path, "j.java")
+
+    mode := os.O_RDWR | os.O_CREATE | os.O_TRUNC
+    f, err = os.OpenFile(filename, mode, 0666)
+    if err != nil {
+        ErrLog(err)
+        return  err
+    }
+
+    _, err = args.GeneratedJavaJson.Buf.WriteTo(f)
+    if err != nil {
+        ErrLog(err)
+        return err
+    }
+
+    return nil
+}
+

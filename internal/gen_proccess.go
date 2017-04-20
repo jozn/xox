@@ -69,6 +69,11 @@ func GenProccess() error {
         return err
     }
 
+    err = tl.XJavaTypes(c, tableMap)
+    if err != nil {
+        return err
+    }
+
 	return nil
 }
 

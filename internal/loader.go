@@ -896,3 +896,25 @@ func (tl TypeLoader) XCacheIndex(args *ArgType, tableMap map[string]*Type) error
 
     return  nil
 }
+
+func (tl TypeLoader) XJavaTypes(args *ArgType, tableMap map[string]*Type) error {
+    tbls := []string{}
+
+    for k, table := range tableMap {
+        if skipTableModel(table.Name) {
+            continue
+        }
+        tbls = append(tbls, k)
+    }
+
+    sort.Strings(tbls)
+
+    //err := ExecuteTemplate(XModeLTypeJavaJsonTemplate, "zz_java", "", tableMap)
+    err := ExecuteJavaJsonTemplate(tableMap)
+    if err != nil {
+        ErrLog(err)
+        return err
+    }
+
+    return nil
+}

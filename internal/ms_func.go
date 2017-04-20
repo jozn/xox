@@ -106,3 +106,20 @@ func ms_question_mark(fields []*Field, ignoreNames ...string) string {
 
 	return s[0 : len(s)-1]
 }
+
+// retype checks typ against known types, and prefixing
+// ArgType.CustomTypePackage (if applicable).
+func to_java_type(typ string) string {
+    t := strings.ToLower(typ)
+    switch t {
+    case "int","int64","int32":
+        return "Integer"
+    case "string":
+        return "String"
+    case "float32":
+        return "Float"
+    case "float64":
+        return "Double"
+    }
+    return "UNKNOWN"
+}
