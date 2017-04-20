@@ -27,7 +27,7 @@ func (c _StoreImpl) {{ $model }}_By{{$col.Name}} ({{$param}} {{$colType}}) (*{{ 
 	return nil, false
 }
 {{$param := (printf "%ss" $col.Name) }}
-func (c _StoreImpl) PreLoad{{ $model }}_By{{$col.Name}} ({{$param}} []{{$colType}}) {
+func (c _StoreImpl) PreLoad{{ $model }}_By{{$col.Name}}s ({{$param}} []{{$colType}}) {
 	not_cached := make([]{{$colType}},0,len({{$param}}))
 
 	for _,id := range {{$param}} {
@@ -46,5 +46,7 @@ func (c _StoreImpl) PreLoad{{ $model }}_By{{$col.Name}} ({{$param}} []{{$colType
         }
 	}
 }
+{{else}}
+// {{$model}} - {{.Index.IndexName}}
 
 {{end}}

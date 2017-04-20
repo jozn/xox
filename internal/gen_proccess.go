@@ -1,5 +1,7 @@
 package internal
 
+import "fmt"
+
 //me: this is the copy of :(tl TypeLoader) LoadSchema(args *ArgType) error
 func GenProccess() error {
 	var err error
@@ -68,4 +70,8 @@ func GenProccess() error {
     }
 
 	return nil
+}
+
+func ErrLog(err error)  {
+    fmt.Println(err)
 }

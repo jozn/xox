@@ -687,6 +687,7 @@ func (tl TypeLoader) LoadTableIndexes(args *ArgType, typeTpl *Type, ixMap map[st
 	// load indexes
 	indexList, err := tl.IndexList(args.DB, args.Schema, typeTpl.Table.TableName)
 	if err != nil {
+        ErrLog(err)
 		return err
 	}
 
@@ -706,6 +707,7 @@ func (tl TypeLoader) LoadTableIndexes(args *ArgType, typeTpl *Type, ixMap map[st
 		// load index columns
 		err = tl.LoadIndexColumns(args, ixTpl)
 		if err != nil {
+            ErrLog(err)
 			return err
 		}
 
@@ -858,6 +860,7 @@ func (tl TypeLoader) XModelsTypes(args *ArgType, tableMap map[string]*Type) erro
         //print("\n")
 		err := ExecuteTemplate(XModeLTypeTemplate, "zz_models", "", tableMap[k])
 		if err != nil {
+            ErrLog(err)
 			return err
 		}
 	}
@@ -874,17 +877,22 @@ func (tl TypeLoader) XCacheIndex(args *ArgType, tableMap map[string]*Type) error
         // load table indexes
         err = tl.LoadTableIndexes(args, table, indexMap)
         if err != nil {
+            ErrLog(err)
             return  err
         }
     }
 
     // generate templates
     for _, index := range indexMap {
+        //fmt.Println(t,index)
         err = ExecuteTemplate(XCacheIndexTemplate, "zz_cache_index", "", index)
         if err != nil {
+            ErrLog(err)
             return err
         }
     }
+    //fmt.Println(indexMap["photo"])
+    //fmt.Println(indexMap["Photo"])
 
     return  nil
 }
