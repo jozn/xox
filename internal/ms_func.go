@@ -123,3 +123,20 @@ func to_java_type(typ string) string {
     }
     return "UNKNOWN"
 }
+
+func datatype_to_defualt_go_type(typ string) string {
+    t := strings.ToLower(typ)
+    switch t {
+    case "int","int64","int32":
+        return "0"
+    case "string":
+        return `""`
+    case "float32":
+        return "float32(0)"
+    case "float64":
+        return "float64(0)"
+    }
+    return "UNKNOWN"
+}
+
+

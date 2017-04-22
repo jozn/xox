@@ -39,6 +39,7 @@ func NewTemplateFuncs() template.FuncMap {
 		"ms_col_comment_json":     ms_col_comment_json,
 		"ms_col_comment_raw":     ms_col_comment_raw,
 		"to_java_type":     to_java_type,
+		"datatype_to_defualt_go_type":     datatype_to_defualt_go_type,
 	}
 }
 

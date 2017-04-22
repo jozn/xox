@@ -15,3 +15,11 @@ type {{ .Name }} struct {
 	_exists, _deleted bool
 {{ end }}
 }
+/*
+:= &{{ .Name }} {
+{{- range .Fields }}
+	{{ .Col.ColumnName }}: {{datatype_to_defualt_go_type .Type }},
+{{- end }}
+*/
+
+
