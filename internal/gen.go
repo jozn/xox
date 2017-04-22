@@ -20,7 +20,7 @@ import (
 	//_ "ms/xox/loaders"
 
 	//_ "github.com/jozn/xoutil"
-    "sort"
+	"sort"
 )
 
 func Gen() {
@@ -78,12 +78,12 @@ func Gen() {
 		os.Exit(1)
 	}
 
-    // output
-    err = writeTypesJavaJson(args)
-    if err != nil {
-        fmt.Fprintf(os.Stderr, "error: %v\n", err)
-        os.Exit(1)
-    }
+	// output
+	err = writeTypesJavaJson(args)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
 
 	// output
 	err = writeTypes(args)
@@ -365,31 +365,30 @@ func writeTypes(args *ArgType) error {
 
 // writeTypes writes the generated definitions.
 func writeTypesJavaJson(args *ArgType) error {
-    var err error
-    var f *os.File
+	var err error
+	var f *os.File
 
-    // check if generated template is only whitespace/empty
-    bufStr := strings.TrimSpace(args.GeneratedJavaJson.Buf.String())
-    if len(bufStr) == 0 {
-        ErrLog(err)
-        return nil
-    }
+	// check if generated template is only whitespace/empty
+	bufStr := strings.TrimSpace(args.GeneratedJavaJson.Buf.String())
+	if len(bufStr) == 0 {
+		ErrLog(err)
+		return nil
+	}
 
-    filename := path.Join(args.Path, "x/j.java")
+	filename := path.Join(args.Path, "x/j.java")
 
-    mode := os.O_RDWR | os.O_CREATE | os.O_TRUNC
-    f, err = os.OpenFile(filename, mode, 0666)
-    if err != nil {
-        ErrLog(err)
-        return  err
-    }
+	mode := os.O_RDWR | os.O_CREATE | os.O_TRUNC
+	f, err = os.OpenFile(filename, mode, 0666)
+	if err != nil {
+		ErrLog(err)
+		return err
+	}
 
-    _, err = args.GeneratedJavaJson.Buf.WriteTo(f)
-    if err != nil {
-        ErrLog(err)
-        return err
-    }
+	_, err = args.GeneratedJavaJson.Buf.WriteTo(f)
+	if err != nil {
+		ErrLog(err)
+		return err
+	}
 
-    return nil
+	return nil
 }
-

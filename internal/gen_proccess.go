@@ -64,19 +64,19 @@ func GenProccess() error {
 		return err
 	}
 
-    err = tl.XCacheIndex(c, tableMap)
-    if err != nil {
-        return err
-    }
+	err = tl.XCacheIndex(c, tableMap)
+	if err != nil {
+		return err
+	}
 
-    err = tl.XJavaTypes(c, tableMap)
-    if err != nil {
-        return err
-    }
+	err = tl.XJavaTypes(c, tableMap)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func ErrLog(err error)  {
-    fmt.Println(err)
+func ErrLog(err error) {
+	fmt.Println(err)
 }

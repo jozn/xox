@@ -4,13 +4,13 @@ import "database/sql"
 
 // Column represents column info.
 type Column_Impl struct {
-    FieldOrdinal int            // field_ordinal
-    ColumnName   string         // column_name
-    DataType     string         // data_type
-    NotNull      bool           // not_null
-    DefaultValue sql.NullString // default_value
-    IsPrimaryKey bool           // is_primary_key
-    Comment      string         // byme
+	FieldOrdinal int            // field_ordinal
+	ColumnName   string         // column_name
+	DataType     string         // data_type
+	NotNull      bool           // not_null
+	DefaultValue sql.NullString // default_value
+	IsPrimaryKey bool           // is_primary_key
+	Comment      string         // byme
 }
 
 // Enum represents a enum.

@@ -18,10 +18,10 @@ const (
 	XCacheTemplate
 	XPBTemplate
 	XModeLTypeTemplate
-    XCacheIndexTemplate
-    XModeLTypeJavaJsonTemplate
+	XCacheIndexTemplate
+	XModeLTypeJavaJsonTemplate
 
-    ////
+	////
 
 	// always last
 	XOTemplate
@@ -57,10 +57,10 @@ func (tt TemplateType) String() string {
 		s = "xpb"
 	case XModeLTypeTemplate:
 		s = "model_type"
-    case XCacheIndexTemplate:
-        s = "xcache_index"
-    case XModeLTypeJavaJsonTemplate:
-        s = "model_type_java_json"
+	case XCacheIndexTemplate:
+		s = "xcache_index"
+	case XModeLTypeJavaJsonTemplate:
+		s = "model_type_java_json"
 
 		/////////////
 	default:

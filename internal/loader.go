@@ -537,9 +537,9 @@ func (tl TypeLoader) LoadColumns(args *ArgType, typeTpl *Type) error {
 
 		// set col info
 		f := &Field{
-			Name: snaker.SnakeToCamelIdentifier(col.ColumnName),
-			Col:  col,
-            Comment: col.Comment,
+			Name:    snaker.SnakeToCamelIdentifier(col.ColumnName),
+			Col:     col,
+			Comment: col.Comment,
 		}
 		f.Len, f.NilType, f.Type = tl.ParseType(args, col.DataType, !col.NotNull)
 
@@ -687,7 +687,7 @@ func (tl TypeLoader) LoadTableIndexes(args *ArgType, typeTpl *Type, ixMap map[st
 	// load indexes
 	indexList, err := tl.IndexList(args.DB, args.Schema, typeTpl.Table.TableName)
 	if err != nil {
-        ErrLog(err)
+		ErrLog(err)
 		return err
 	}
 
@@ -707,7 +707,7 @@ func (tl TypeLoader) LoadTableIndexes(args *ArgType, typeTpl *Type, ixMap map[st
 		// load index columns
 		err = tl.LoadIndexColumns(args, ixTpl)
 		if err != nil {
-            ErrLog(err)
+			ErrLog(err)
 			return err
 		}
 
@@ -856,11 +856,11 @@ func (tl TypeLoader) XModelsTypes(args *ArgType, tableMap map[string]*Type) erro
 
 	sort.Strings(tbls)
 	for _, k := range tbls {
-        //print(k)
-        //print("\n")
+		//print(k)
+		//print("\n")
 		err := ExecuteTemplate(XModeLTypeTemplate, "zz_models", "", tableMap[k])
 		if err != nil {
-            ErrLog(err)
+			ErrLog(err)
 			return err
 		}
 	}
@@ -870,51 +870,51 @@ func (tl TypeLoader) XModelsTypes(args *ArgType, tableMap map[string]*Type) erro
 
 func (tl TypeLoader) XCacheIndex(args *ArgType, tableMap map[string]*Type) error {
 
-    var err error
+	var err error
 
-    indexMap := map[string]*Index{}
-    for _, table := range tableMap {
-        // load table indexes
-        err = tl.LoadTableIndexes(args, table, indexMap)
-        if err != nil {
-            ErrLog(err)
-            return  err
-        }
-    }
+	indexMap := map[string]*Index{}
+	for _, table := range tableMap {
+		// load table indexes
+		err = tl.LoadTableIndexes(args, table, indexMap)
+		if err != nil {
+			ErrLog(err)
+			return err
+		}
+	}
 
-    // generate templates
-    for _, index := range indexMap {
-        //fmt.Println(t,index)
-        err = ExecuteTemplate(XCacheIndexTemplate, "zz_cache_index", "", index)
-        if err != nil {
-            ErrLog(err)
-            return err
-        }
-    }
-    //fmt.Println(indexMap["photo"])
-    //fmt.Println(indexMap["Photo"])
+	// generate templates
+	for _, index := range indexMap {
+		//fmt.Println(t,index)
+		err = ExecuteTemplate(XCacheIndexTemplate, "zz_cache_index", "", index)
+		if err != nil {
+			ErrLog(err)
+			return err
+		}
+	}
+	//fmt.Println(indexMap["photo"])
+	//fmt.Println(indexMap["Photo"])
 
-    return  nil
+	return nil
 }
 
 func (tl TypeLoader) XJavaTypes(args *ArgType, tableMap map[string]*Type) error {
-    tbls := []string{}
+	tbls := []string{}
 
-    for k, table := range tableMap {
-        if skipTableModel(table.Name) {
-            continue
-        }
-        tbls = append(tbls, k)
-    }
+	for k, table := range tableMap {
+		if skipTableModel(table.Name) {
+			continue
+		}
+		tbls = append(tbls, k)
+	}
 
-    sort.Strings(tbls)
+	sort.Strings(tbls)
 
-    //err := ExecuteTemplate(XModeLTypeJavaJsonTemplate, "zz_java", "", tableMap)
-    err := ExecuteJavaJsonTemplate(tableMap)
-    if err != nil {
-        ErrLog(err)
-        return err
-    }
+	//err := ExecuteTemplate(XModeLTypeJavaJsonTemplate, "zz_java", "", tableMap)
+	err := ExecuteJavaJsonTemplate(tableMap)
+	if err != nil {
+		ErrLog(err)
+		return err
+	}
 
-    return nil
+	return nil
 }

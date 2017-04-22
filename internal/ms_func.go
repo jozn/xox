@@ -49,22 +49,22 @@ func ms_to_slice(typ ...string) []string {
 }
 
 func ms_col_comment_json(comment string) string {
-    //fmt.Println( comment)
-    arr := strings.Split(strings.ToLower(comment),",")
-    for _,s := range arr{
-        //fmt.Println(s, comment)
-        if "nojson" == strings.Trim(s," "){
-            return "`json:\"-\"`"
-        }
-    }
-    return ""
+	//fmt.Println( comment)
+	arr := strings.Split(strings.ToLower(comment), ",")
+	for _, s := range arr {
+		//fmt.Println(s, comment)
+		if "nojson" == strings.Trim(s, " ") {
+			return "`json:\"-\"`"
+		}
+	}
+	return ""
 }
 
 func ms_col_comment_raw(comment string) string {
-    if strings.Trim(comment," ") != ""{
-        return "//"+comment
-    }
-    return ""
+	if strings.Trim(comment, " ") != "" {
+		return "//" + comment
+	}
+	return ""
 }
 
 func ms_append_fieldnames(fields []*Field, slice string, ignoreNames ...string) string {
@@ -110,33 +110,31 @@ func ms_question_mark(fields []*Field, ignoreNames ...string) string {
 // retype checks typ against known types, and prefixing
 // ArgType.CustomTypePackage (if applicable).
 func to_java_type(typ string) string {
-    t := strings.ToLower(typ)
-    switch t {
-    case "int","int64","int32":
-        return "Integer"
-    case "string":
-        return "String"
-    case "float32":
-        return "Float"
-    case "float64":
-        return "Double"
-    }
-    return "UNKNOWN"
+	t := strings.ToLower(typ)
+	switch t {
+	case "int", "int64", "int32":
+		return "Integer"
+	case "string":
+		return "String"
+	case "float32":
+		return "Float"
+	case "float64":
+		return "Double"
+	}
+	return "UNKNOWN"
 }
 
 func datatype_to_defualt_go_type(typ string) string {
-    t := strings.ToLower(typ)
-    switch t {
-    case "int","int64","int32":
-        return "0"
-    case "string":
-        return `""`
-    case "float32":
-        return "float32(0)"
-    case "float64":
-        return "float64(0)"
-    }
-    return "UNKNOWN"
+	t := strings.ToLower(typ)
+	switch t {
+	case "int", "int64", "int32":
+		return "0"
+	case "string":
+		return `""`
+	case "float32":
+		return "float32(0)"
+	case "float64":
+		return "float64(0)"
+	}
+	return "UNKNOWN"
 }
-
-
