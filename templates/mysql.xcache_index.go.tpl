@@ -17,7 +17,7 @@ func (c _StoreImpl) {{ $model }}_By{{$col.Name}} ({{$param}} {{$colType}}) (*{{ 
 		}
 	}
 
-	row, err := New{{ $model }}_Selector().{{$col.Name}}_EQ({{$param}}).GetRow(base.DB)
+	row, err := New{{ $model }}_Selector().{{$col.Name}}_Eq({{$param}}).GetRow(base.DB)
 	if err == nil{
         RowCacheIndex.Set("{{ $indexName }}:"+fmt.Sprintf("%v",row.{{$param}}), row,0)
         return row, true

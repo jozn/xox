@@ -11,8 +11,8 @@ type msCond struct {
 
 func ms_conds() []msCond {
 	return []msCond{
-		msCond{"_EQ", "="},
-		msCond{"_NotEQ", "!="},
+		msCond{"_Eq", "="},
+		msCond{"_NotEq", "!="},
 		msCond{"_LT", "<"},
 		msCond{"_LE", "<="},
 		msCond{"_GT", ">"},
@@ -23,7 +23,8 @@ func ms_conds() []msCond {
 
 func ms_str_cond() []msCond {
 	return []msCond{
-		msCond{"_EQ", "="},
+		msCond{"_Eq", "="},
+		msCond{"_NotEq", "!="},
 	}
 
 }
