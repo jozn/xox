@@ -375,7 +375,7 @@ func writeTypesJavaJson(args *ArgType) error {
 		return nil
 	}
 
-	filename := path.Join(args.Path, "x/j.java")
+	filename := path.Join(args.Path, "x/J.java")
 
 	mode := os.O_RDWR | os.O_CREATE | os.O_TRUNC
 	f, err = os.OpenFile(filename, mode, 0666)
