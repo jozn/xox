@@ -92,6 +92,12 @@ func Gen() {
 		os.Exit(1)
 	}
 
+    err = writeTypesPBConv()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "error: %v\n", err)
+        os.Exit(1)
+    }
+
 	// output
 	err = writeTypes(args)
 	if err != nil {
@@ -428,4 +434,33 @@ func writeTypesPB() error {
 	}
 
 	return nil
+}
+
+func writeTypesPBConv() error {
+    var err error
+    var f *os.File
+
+    // check if generated template is only whitespace/empty
+    bufStr := strings.TrimSpace(c.GeneratedPbConverter)
+    if len(bufStr) == 0 {
+        ErrLog(err)
+        return nil
+    }
+
+    filename := path.Join(c.Path, "pb_conv.go")
+
+    mode := os.O_RDWR | os.O_CREATE | os.O_TRUNC
+    f, err = os.OpenFile(filename, mode, 0666)
+    if err != nil {
+        ErrLog(err)
+        return err
+    }
+
+    _, err = f.WriteString(c.GeneratedPbConverter)
+    if err != nil {
+        ErrLog(err)
+        return err
+    }
+
+    return nil
 }

@@ -142,6 +142,7 @@ type ArgType struct {
 	Generated         []TBuf_OutputToFileHolder `arg:"-"`
 	GeneratedJavaJson TBuf_OutputToFileHolder   `arg:"-"`
 	GeneratedPb       string                    `arg:"-"`
+	GeneratedPbConverter       string                    `arg:"-"`
 
 	// KnownTypeMap is the collection of known Go types.
 	KnownTypeMap map[string]bool `arg:"-"`

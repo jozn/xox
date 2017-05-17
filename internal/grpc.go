@@ -21,11 +21,6 @@ type ProtoMessageDef struct {
 type ProtoMessageFieldDef struct {
 	TagId    int
 	Name     string
-	DataType string
-    OutType string
-    GoType string
-    JavaType string
-    TableType string
     TypeMix SqlToPBType
     PBType string
 	Repeat   bool
@@ -41,14 +36,9 @@ func Gen_ProtosForTables(args *ArgType) {
 		}
 
 		for i, f := range t.Fields {
-            ot := GRPC_TYOPES_MAP[f.Type]
-
 			fpb := ProtoMessageFieldDef{
 				TagId:    (i*2 + 1),
 				Name:     f.Name,
-				DataType: f.Type,
-				OutType: ot,
-				GoType: ot,
                 TypeMix: MysqlParseTypeToProtoclBuffer(f.Col.DataType,true),
 				Repeat:   false,
 			}
@@ -58,6 +48,7 @@ func Gen_ProtosForTables(args *ArgType) {
 		filePB.Messages = append(filePB.Messages, tpb)
 	}
 
+    //gen proto def
 	tmpl, err := template.New("t").Parse(TMP_PB)
 	if err != nil {
 		panic(err)
@@ -68,6 +59,18 @@ func Gen_ProtosForTables(args *ArgType) {
 		panic(err)
 	}
 	c.GeneratedPb += out.String()
+
+    //gen proto conv
+    tmplCon, err := template.New("t").Parse(TMP_PB_CONVERTER)
+    if err != nil {
+        panic(err)
+    }
+    outConv := bytes.NewBufferString("")
+    err = tmplCon.Execute(outConv, filePB)
+    if err != nil {
+        panic(err)
+    }
+    c.GeneratedPbConverter = outConv.String()
 
 	fmt.Println("size of PB (tabels) : ", len(c.Loader.CacheTables))
 }
@@ -90,6 +93,24 @@ message {{.MessageName }}_PB {
 }
 
 {{- end}}
+`
+
+const TMP_PB_CONVERTER = `
+package x
+
+{{range .Messages}}
+
+func PBCon_{{.MessageName }}_PB_To_{{.MessageName }}( o *{{.MessageName }}_PB) *{{.MessageName }} {
+    n := &{{.MessageName}}{
+     {{- range .Fields }}
+      {{.Name}}: o.{{.Name}},
+      {{- end }}
+    }
+
+    return n
+}
+{{- end}}
+
 `
 
 //============================================================
