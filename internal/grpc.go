@@ -16,6 +16,7 @@ type ProtoFile struct {
 type ProtoMessageDef struct {
 	Fields      []ProtoMessageFieldDef
 	MessageName string
+    IsTableNotInline bool //for complex types like user we need to refrence fields with dot (.)
 }
 
 type ProtoMessageFieldDef struct {
@@ -33,6 +34,7 @@ func Gen_ProtosForTables(args *ArgType) {
 	for _, t := range tbls {
 		tpb := ProtoMessageDef{
 			MessageName: t.Name,
+            IsTableNotInline: skipTableModel(t.Name),
 		}
 
 		for i, f := range t.Fields {
@@ -100,23 +102,48 @@ package x
 
 {{range .Messages}}
 
-func PBCon_{{.MessageName }}_PB_To_{{.MessageName }}( o *{{.MessageName }}_PB) *{{.MessageName }} {
-    n := &{{.MessageName}}{
-     {{- range .Fields }}
-      {{.Name}}: o.{{.Name}},
+func PBConv_{{.MessageName }}_PB_To_{{.MessageName }}( o *{{.MessageName }}_PB) *{{.MessageName }} {
+  {{- if .IsTableNotInline -}}
+   n := &{{.MessageName}}{}
+    {{- range .Fields }}
+   n.{{.Name}} = {{.TypeMix.Go}} ( o.{{.Name}} )
+    {{- end -}}
+
+  {{else }}
+     n := &{{.MessageName}}{
+    {{- range .Fields }}
+      {{.Name}}: {{.TypeMix.Go}} ( o.{{.Name}} ),
       {{- end }}
     }
-
+  {{- end }}
     return n
 }
-{{- end}}
 
+func PBConv_{{.MessageName }}_To_{{.MessageName }}_PB ( o *{{.MessageName }}) *{{.MessageName }}_PB {
+  {{- if .IsTableNotInline -}}
+   n := &{{.MessageName}}_PB{}
+    {{- range .Fields }}
+   n.{{.Name}} = {{.TypeMix.GoGen}} ( o.{{.Name}} )
+    {{- end -}}
+
+  {{else }}
+     n := &{{.MessageName}}_PB{
+    {{- range .Fields }}
+      {{.Name}}: {{.TypeMix.GoGen}} ( o.{{.Name}} ),
+      {{- end }}
+    }
+  {{- end }}
+    return n
+}
+
+{{- end}}
 `
 
 //============================================================
 
 type SqlToPBType struct{
-    Go string
+    Go string //simple go
+    GoGen string //go type from pb genrator
     table string
     Java string
     PB string
@@ -146,6 +173,7 @@ func MysqlParseTypeToProtoclBuffer(dt string, fromMysql bool) SqlToPBType {
     case "bool", "boolean":
         res = SqlToPBType{
             Go: "bool",
+            GoGen: "bool",
             table: "bool",
             Java: "Boolean",
             PB: "bool",
@@ -154,6 +182,7 @@ func MysqlParseTypeToProtoclBuffer(dt string, fromMysql bool) SqlToPBType {
     case "char", "varchar", "tinytext", "text", "mediumtext", "longtext":
         res = SqlToPBType{
             Go: "string",
+            GoGen: "string",
             table: "text",
             Java: "String",
             PB: "string",
@@ -162,6 +191,7 @@ func MysqlParseTypeToProtoclBuffer(dt string, fromMysql bool) SqlToPBType {
     case "tinyint", "smallint", "mediumint", "int", "integer":
         res = SqlToPBType{
             Go: "int",
+            GoGen: "int32",
             table: "int",
             Java: "Integer",
             PB: "int32",
@@ -171,6 +201,7 @@ func MysqlParseTypeToProtoclBuffer(dt string, fromMysql bool) SqlToPBType {
         //the main diffrence is for int64
         res = SqlToPBType{
             Go: "int",
+            GoGen: "int64",
             table: "bigint",
             Java: "Long",
             PB: "int64",
@@ -179,6 +210,7 @@ func MysqlParseTypeToProtoclBuffer(dt string, fromMysql bool) SqlToPBType {
     case "float":
         res = SqlToPBType{
             Go: "float32",
+            GoGen: "float32",
             table: "float",
             Java: "Float",
             PB: "float",
@@ -187,6 +219,7 @@ func MysqlParseTypeToProtoclBuffer(dt string, fromMysql bool) SqlToPBType {
     case "decimal", "double":
         res = SqlToPBType{
             Go: "float64",
+            GoGen: "float64",
             table: "double",
             Java: "Double",
             PB: "double",
@@ -195,6 +228,7 @@ func MysqlParseTypeToProtoclBuffer(dt string, fromMysql bool) SqlToPBType {
     case "binary", "varbinary", "tinyblob", "blob", "mediumblob", "longblob":
         res = SqlToPBType{
             Go: "[]byte",
+            GoGen: "[]byte",
             table: "binary",
             Java: "[]byte",
             PB: "????",
