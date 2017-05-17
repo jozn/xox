@@ -101,7 +101,7 @@ const TMP_PB_CONVERTER = `
 package x
 
 {{range .Messages}}
-
+/*
 func PBConv_{{.MessageName }}_PB_To_{{.MessageName }}( o *{{.MessageName }}_PB) *{{.MessageName }} {
   {{- if .IsTableNotInline -}}
    n := &{{.MessageName}}{}
@@ -135,7 +135,7 @@ func PBConv_{{.MessageName }}_To_{{.MessageName }}_PB ( o *{{.MessageName }}) *{
   {{- end }}
     return n
 }
-
+*/
 {{- end}}
 `
 

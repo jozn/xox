@@ -418,10 +418,10 @@ func writeTypesPB() error {
 		return nil
 	}
 
-	filename := path.Join(c.Path, "x/pb_.proto")
+	filename := path.Join(c.Path, "proto_gen/tabels.proto")
+    os.MkdirAll(path.Dir(filename), os.ModeDir)
 
-	mode := os.O_RDWR | os.O_CREATE | os.O_TRUNC
-	f, err = os.OpenFile(filename, mode, 0666)
+	f, err = os.Create(filename)
 	if err != nil {
 		ErrLog(err)
 		return err
@@ -447,7 +447,7 @@ func writeTypesPBConv() error {
         return nil
     }
 
-    filename := path.Join(c.Path, "pb_conv.go")
+    filename := path.Join(c.Path, "pb_conv_gen.go")
 
     mode := os.O_RDWR | os.O_CREATE | os.O_TRUNC
     f, err = os.OpenFile(filename, mode, 0666)
