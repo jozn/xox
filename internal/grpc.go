@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"text/template"
+    "strings"
 )
 
 type ProtoFile struct {
@@ -22,6 +23,11 @@ type ProtoMessageFieldDef struct {
 	Name     string
 	DataType string
     OutType string
+    GoType string
+    JavaType string
+    TableType string
+    TypeMix SqlToPBType
+    PBType string
 	Repeat   bool
 }
 
@@ -36,11 +42,14 @@ func Gen_ProtosForTables(args *ArgType) {
 
 		for i, f := range t.Fields {
             ot := GRPC_TYOPES_MAP[f.Type]
+
 			fpb := ProtoMessageFieldDef{
 				TagId:    (i*2 + 1),
 				Name:     f.Name,
 				DataType: f.Type,
 				OutType: ot,
+				GoType: ot,
+                TypeMix: MysqlParseTypeToProtoclBuffer(f.Col.DataType,true),
 				Repeat:   false,
 			}
 			tpb.Fields = append(tpb.Fields, fpb)
@@ -76,9 +85,104 @@ syntax = "proto3";
 {{range .Messages}}
 message {{.MessageName }}_PB {
     {{- range .Fields }}
-    {{.OutType}} {{.Name}} = {{  ( (.TagId ) )  }} ;
+    {{.TypeMix.PB }} {{.Name}} = {{.TagId}};
     {{- end }}
 }
 
 {{- end}}
 `
+
+//============================================================
+
+type SqlToPBType struct{
+    Go string
+    table string
+    Java string
+    PB string
+}
+
+//cp of MyParseType(...)
+func MysqlParseTypeToProtoclBuffer(dt string, fromMysql bool) SqlToPBType {
+    precision := 0
+    unsigned := false
+
+    res := SqlToPBType{}
+    // extract unsigned
+
+    if fromMysql {
+        if strings.HasSuffix(dt, " unsigned") {
+            unsigned = true
+            dt = dt[:len(dt)-len(" unsigned")]
+        }
+
+        // extract precision
+        dt, precision, _ = ParsePrecision(dt)
+        _ = precision
+        _ = unsigned
+    }
+
+    switch dt {
+    case "bool", "boolean":
+        res = SqlToPBType{
+            Go: "bool",
+            table: "bool",
+            Java: "Boolean",
+            PB: "bool",
+        }
+
+    case "char", "varchar", "tinytext", "text", "mediumtext", "longtext":
+        res = SqlToPBType{
+            Go: "string",
+            table: "text",
+            Java: "String",
+            PB: "string",
+        }
+
+    case "tinyint", "smallint", "mediumint", "int", "integer":
+        res = SqlToPBType{
+            Go: "int",
+            table: "int",
+            Java: "Integer",
+            PB: "int32",
+        }
+
+    case "bigint":
+        //the main diffrence is for int64
+        res = SqlToPBType{
+            Go: "int",
+            table: "bigint",
+            Java: "Long",
+            PB: "int64",
+        }
+
+    case "float":
+        res = SqlToPBType{
+            Go: "float32",
+            table: "float",
+            Java: "Float",
+            PB: "float",
+        }
+
+    case "decimal", "double":
+        res = SqlToPBType{
+            Go: "float64",
+            table: "double",
+            Java: "Double",
+            PB: "double",
+        }
+
+    case "binary", "varbinary", "tinyblob", "blob", "mediumblob", "longblob":
+        res = SqlToPBType{
+            Go: "[]byte",
+            table: "binary",
+            Java: "[]byte",
+            PB: "????",
+        }
+
+    case "timestamp", "datetime", "date", "time":
+
+    default:
+    }
+return res
+}
+
