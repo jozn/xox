@@ -141,6 +141,7 @@ type ArgType struct {
 	// Generated is the generated templates after a run.
 	Generated         []TBuf_OutputToFileHolder `arg:"-"`
 	GeneratedJavaJson TBuf_OutputToFileHolder   `arg:"-"`
+	GeneratedPb       string                    `arg:"-"`
 
 	// KnownTypeMap is the collection of known Go types.
 	KnownTypeMap map[string]bool `arg:"-"`
@@ -153,6 +154,10 @@ type ArgType struct {
 // NewDefaultArgs returns the default arguments.
 func NewDefaultArgs_MS() *ArgType {
 	fkMode := FkModeSmart
+
+	if c != nil {
+		return c
+	}
 
 	c = &ArgType{
 		Suffix:              ".z.go",
@@ -272,4 +277,4 @@ func (a *ArgType) Description() string {
 }
 
 // Args are the application arguments.
-var Args *ArgType
+//var Args *ArgType

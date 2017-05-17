@@ -4,7 +4,7 @@ package internal
 var c *ArgType
 
 func init() {
-	c = NewDefaultArgs_MS()
+	//c = NewDefaultArgs_MS()
 }
 
 /*

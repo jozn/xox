@@ -63,6 +63,9 @@ type TypeLoader struct {
 	IndexColumnList func(XODB, string, string, string) ([]*IndexColumn_Impl, error)
 	QueryStrip      func([]string, []string)
 	QueryColumnList func(*ArgType, []string) ([]*Column_Impl, error)
+
+	//Me
+	CacheTables []*Type //tabels and its fields
 }
 
 // NthParam satisifies Loader's NthParam.
@@ -473,6 +476,8 @@ func (tl TypeLoader) LoadRelkind(args *ArgType, relType RelType) (map[string]*Ty
 		return nil, err
 	}
 
+	//me:
+	var tablesAll []*Type
 	// tables
 	tableMap := make(map[string]*Type)
 	for _, ti := range tableList {
@@ -492,6 +497,12 @@ func (tl TypeLoader) LoadRelkind(args *ArgType, relType RelType) (map[string]*Ty
 		}
 
 		tableMap[strings.ToLower(ti.TableName)] = typeTpl
+
+		tablesAll = append(tablesAll, typeTpl)
+	}
+
+	if relType == Table {
+		c.Loader.CacheTables = tablesAll
 	}
 
 	// generate table templates
@@ -904,6 +915,28 @@ func (tl TypeLoader) XJavaTypes(args *ArgType, tableMap map[string]*Type) error 
 		if skipTableModel(table.Name) {
 			continue
 		}
+		tbls = append(tbls, k)
+	}
+
+	sort.Strings(tbls)
+
+	//err := ExecuteTemplate(XModeLTypeJavaJsonTemplate, "zz_java", "", tableMap)
+	err := ExecuteJavaJsonTemplate(tableMap)
+	if err != nil {
+		ErrLog(err)
+		return err
+	}
+
+	return nil
+}
+
+func (tl TypeLoader) XProtoBuffer(args *ArgType, tableMap map[string]*Type) error {
+	tbls := []string{}
+
+	for k, _ := range tableMap {
+		//if skipTableModel(table.Name) {
+		//    continue
+		//}
 		tbls = append(tbls, k)
 	}
 

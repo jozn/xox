@@ -74,6 +74,8 @@ func GenProccess() error {
 		return err
 	}
 
+	//Protocol buffer
+	Gen_ProtosForTables(c)
 	return nil
 }
 

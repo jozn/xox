@@ -27,8 +27,8 @@ func Gen() {
 	var err error
 
 	// get defaults
-	Args = NewDefaultArgs_MS()
-	args := Args
+	//Args = NewDefaultArgs_MS()
+	args := NewDefaultArgs_MS()
 
 	//fmt.Println(os.Args) //me
 	// parse args
@@ -80,6 +80,13 @@ func Gen() {
 
 	// output
 	err = writeTypesJavaJson(args)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+
+	// output
+	err = writeTypesPB()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
@@ -385,6 +392,36 @@ func writeTypesJavaJson(args *ArgType) error {
 	}
 
 	_, err = args.GeneratedJavaJson.Buf.WriteTo(f)
+	if err != nil {
+		ErrLog(err)
+		return err
+	}
+
+	return nil
+}
+
+// writeTypes writes the generated definitions.
+func writeTypesPB() error {
+	var err error
+	var f *os.File
+
+	// check if generated template is only whitespace/empty
+	bufStr := strings.TrimSpace(c.GeneratedPb)
+	if len(bufStr) == 0 {
+		ErrLog(err)
+		return nil
+	}
+
+	filename := path.Join(c.Path, "x/pb_.proto")
+
+	mode := os.O_RDWR | os.O_CREATE | os.O_TRUNC
+	f, err = os.OpenFile(filename, mode, 0666)
+	if err != nil {
+		ErrLog(err)
+		return err
+	}
+
+	_, err = f.WriteString(c.GeneratedPb)
 	if err != nil {
 		ErrLog(err)
 		return err
