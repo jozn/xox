@@ -88,7 +88,7 @@ const TMP_PB = `
 syntax = "proto3";
 
 {{range .Messages}}
-message {{.MessageName }}_PB {
+message PB_{{.MessageName }} {
     {{- range .Fields }}
     {{.TypeMix.PB }} {{.Name}} = {{.TagId}};
     {{- end }}
@@ -102,7 +102,7 @@ package x
 
 {{range .Messages}}
 /*
-func PBConv_{{.MessageName }}_PB_To_{{.MessageName }}( o *{{.MessageName }}_PB) *{{.MessageName }} {
+func PBConvPB__{{.MessageName }}_To_{{.MessageName }}( o *PB_{{.MessageName }}) *{{.MessageName }} {
   {{- if .IsTableNotInline -}}
    n := &{{.MessageName}}{}
     {{- range .Fields }}
@@ -119,15 +119,15 @@ func PBConv_{{.MessageName }}_PB_To_{{.MessageName }}( o *{{.MessageName }}_PB) 
     return n
 }
 
-func PBConv_{{.MessageName }}_To_{{.MessageName }}_PB ( o *{{.MessageName }}) *{{.MessageName }}_PB {
+func PBConvPB_{{.MessageName }}_To_{{.MessageName }} ( o *{{.MessageName }}) *PB_{{.MessageName }} {
   {{- if .IsTableNotInline -}}
-   n := &{{.MessageName}}_PB{}
+   n := &PB_{{.MessageName}}{}
     {{- range .Fields }}
    n.{{.Name}} = {{.TypeMix.GoGen}} ( o.{{.Name}} )
     {{- end -}}
 
   {{else }}
-     n := &{{.MessageName}}_PB{
+     n := &PB_{{.MessageName}}{
     {{- range .Fields }}
       {{.Name}}: {{.TypeMix.GoGen}} ( o.{{.Name}} ),
       {{- end }}
