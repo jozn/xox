@@ -733,6 +733,9 @@ func (d *{{$deleterType}})Delete (db XODB) (int,error) {
 
 ///////////////////////// Mass insert - replace for  {{ .Name }} ////////////////
 func MassInsert_{{ .Name }}(rows []{{ .Name }} ,db XODB) error {
+	if len(rows) == 0 {
+		return errors.New("rows slice should not be empty - inserted nothing")
+	}
 	var err error
 	ln := len(rows)
 	s:= "({{ ms_question_mark .Fields .PrimaryKey.Name }})," //`(?, ?, ?, ?),`

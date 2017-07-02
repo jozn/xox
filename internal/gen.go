@@ -26,7 +26,9 @@ import (
 func Gen() {
 	var err error
 
-	// get defaults
+    fmt.Println("Args: ", os.Args)
+
+    // get defaults
 	//Args = NewDefaultArgs_MS()
 	args := NewDefaultArgs_MS()
 
@@ -144,6 +146,7 @@ func processArgs(args *ArgType) error {
 
 			// error if split was set, but dest doesn't exist
 			if !args.SingleFile {
+                fmt.Println("path: ",args.Path)
 				return errors.New("output path must be a directory and already exist when not writing to a single file")
 			}
 		} else {
