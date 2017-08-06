@@ -798,6 +798,7 @@ func (tl TypeLoader) LoadIndexColumns(args *ArgType, ixTpl *Index) error {
 // LoadIndexColumns loads the index column information.
 func (tl TypeLoader) XLoadEvents(args *ArgType, tableMap map[string]*Type) error {
 	for _, table := range tableMap {
+        fmt.Println("XLoadEvent: ", table)
 		//err := ExecuteTemplate(XEventTemplate, "event_"+table.Name, "", table)
 		err := ExecuteTemplate(XEventTemplate, "zz_event", "", table)
 		if err != nil {

@@ -95,6 +95,23 @@ func ({{ $short }} *{{ .Name }}) Replace(db XODB) error {
 	var err error
 
 	// sql query
+{{ if .Table.ManualPk  }}
+	const sqlstr = `REPLACE INTO {{ $table }} (` +
+		`{{ colnames .Fields }}` +
+		`) VALUES (` +
+		`{{ colvals .Fields }}` +
+		`)`
+
+	// run query
+	XOLog(sqlstr, {{ fieldnames .Fields $short  }})
+	res, err := db.Exec(sqlstr, {{ fieldnames .Fields $short }})
+	if err != nil {
+		XOLogErr(err)
+		return err
+	}
+
+	{{ $short }}._exists = true
+{{else}}
 	const sqlstr = `REPLACE INTO {{ $table }} (` +
 		`{{ colnames .Fields .PrimaryKey.Name }}` +
 		`) VALUES (` +
@@ -103,7 +120,7 @@ func ({{ $short }} *{{ .Name }}) Replace(db XODB) error {
 
 	// run query
 	XOLog(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }})
-	res, err := db.Exec(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }})
+	_, err := db.Exec(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }})
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -119,6 +136,7 @@ func ({{ $short }} *{{ .Name }}) Replace(db XODB) error {
 	// set primary key and existence
 	{{ $short }}.{{ .PrimaryKey.Name }} = {{ .PrimaryKey.Type }}(id)
 	{{ $short }}._exists = true
+{{end}}
 
 	On{{ .Name }}_AfterInsert({{ $short }})
 
