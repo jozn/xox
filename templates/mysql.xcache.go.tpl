@@ -4,6 +4,7 @@
 {{- $_ := "" }}
 {{- $id := (.PrimaryKey.Name) }}
 
+{{if (eq .PrimaryKey.Type "int") }}
 {{/* //{{ .Name }} Events - * (Manually copy this to other location) */}}
 func (c _StoreImpl) Get{{ .Name }}By{{$id}}{{$_}} ({{$id}} int) (*{{ .Name }},bool){
 	o ,ok :=RowCache.Get("{{ .Name }}:"+strconv.Itoa({{$id}}))
@@ -34,9 +35,11 @@ func (c _StoreImpl) PreLoad{{ .Name }}By{{$id}}s{{$_}} (ids []int) {
 		New{{ .Name }}_Selector().{{$id}}_In(not_cached).GetRows(base.DB)
 	}
 }
+{{else if ( eq .PrimaryKey.Type "string" ) }}
+// yes {{.PrimaryKey.Type}}
 
-
-
+{{end}}
+// yes 222 {{.PrimaryKey.Type }}
 
 
 

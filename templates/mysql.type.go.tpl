@@ -104,7 +104,7 @@ func ({{ $short }} *{{ .Name }}) Replace(db XODB) error {
 
 	// run query
 	XOLog(sqlstr, {{ fieldnames .Fields $short  }})
-	res, err := db.Exec(sqlstr, {{ fieldnames .Fields $short }})
+	_, err = db.Exec(sqlstr, {{ fieldnames .Fields $short }})
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -120,7 +120,7 @@ func ({{ $short }} *{{ .Name }}) Replace(db XODB) error {
 
 	// run query
 	XOLog(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }})
-	_, err := db.Exec(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }})
+	res, err := db.Exec(sqlstr, {{ fieldnames .Fields $short .PrimaryKey.Name }})
 	if err != nil {
 		XOLogErr(err)
 		return err
