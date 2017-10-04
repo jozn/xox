@@ -36,8 +36,35 @@ func (c _StoreImpl) PreLoad{{ .Name }}By{{$id}}s{{$_}} (ids []int) {
 	}
 }
 {{else if ( eq .PrimaryKey.Type "string" ) }}
-// yes {{.PrimaryKey.Type}}
+func (c _StoreImpl) Get{{ .Name }}By{{$id}}{{$_}} ({{$id}} string) (*{{ .Name }},bool){
+	o ,ok :=RowCache.Get("{{ .Name }}:"+{{$id}})
+	if ok {
+		if obj, ok := o.(*{{ .Name }});ok{
+			return obj, true
+		}
+	}
+	obj2 ,err := {{ .Name }}By{{.PrimaryKey.Name}}(base.DB, {{$id}})
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
 
+func (c _StoreImpl) PreLoad{{ .Name }}By{{$id}}s{{$_}} (ids []string) {
+	not_cached := make([]string,0,len(ids))
+
+	for _,id := range ids {
+		_ ,ok :=RowCache.Get("{{ .Name }}:"+id)
+		if !ok {
+			not_cached = append(not_cached,id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		New{{ .Name }}_Selector().{{$id}}_In(not_cached).GetRows(base.DB)
+	}
+}
 {{end}}
 // yes 222 {{.PrimaryKey.Type }}
 
