@@ -750,12 +750,79 @@ func (d *{{$deleterType}})Delete (db XODB) (int,error) {
 }
 
 ///////////////////////// Mass insert - replace for  {{ .Name }} ////////////////
+{{ if .Table.ManualPk  }}
 func MassInsert_{{ .Name }}(rows []{{ .Name }} ,db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
 	var err error
 	ln := len(rows)
+	//s:= "({{ ms_question_mark .Fields }})," //`(?, ?, ?, ?),`
+	s:= "({{ ms_question_mark .Fields }})," //`(?, ?, ?, ?),`
+	insVals_:= strings.Repeat(s, ln)
+	insVals := insVals_[0:len(insVals_)-1]
+	// sql query
+	sqlstr := "INSERT INTO {{ $table }} (" +
+		"{{ colnames .Fields  }}" +
+		") VALUES " + insVals
+
+	// run query
+	vals := make([]interface{},0, ln * 5)//5 fields
+	
+	for _,row := range rows {
+		// vals = append(vals,row.UserId)
+		{{ ms_append_fieldnames .Fields "vals" }}
+	} 
+
+	XOLog(sqlstr, " MassInsert len = ", ln, vals)
+
+	_, err = db.Exec(sqlstr, vals...)
+	if err != nil {
+		XOLogErr(err)
+		return err
+	}
+	
+	return nil
+}
+
+func MassReplace_{{ .Name }}(rows []{{ .Name }} ,db XODB) error {
+	var err error
+	ln := len(rows)
+	s:= "({{ ms_question_mark .Fields }})," //`(?, ?, ?, ?),`
+	insVals_:= strings.Repeat(s, ln)
+	insVals := insVals_[0:len(insVals_)-1]
+	// sql query
+	sqlstr := "REPLACE INTO {{ $table }} (" +
+		"{{ colnames .Fields }}" +
+		") VALUES " + insVals
+
+	// run query
+	vals := make([]interface{},0, ln * 5)//5 fields
+	
+	for _,row := range rows {
+		// vals = append(vals,row.UserId)
+		{{ ms_append_fieldnames .Fields "vals" }}
+	} 
+
+	XOLog(sqlstr, " MassReplace len = ", ln , vals)
+
+	_, err = db.Exec(sqlstr, vals...)
+	if err != nil {
+		XOLogErr(err)
+		return err
+	}
+	
+	return nil
+}
+{{ else }}
+
+func MassInsert_{{ .Name }}(rows []{{ .Name }} ,db XODB) error {
+	if len(rows) == 0 {
+		return errors.New("rows slice should not be empty - inserted nothing")
+	}
+	var err error
+	ln := len(rows)
+	//s:= "({{ ms_question_mark .Fields .PrimaryKey.Name }})," //`(?, ?, ?, ?),`
 	s:= "({{ ms_question_mark .Fields .PrimaryKey.Name }})," //`(?, ?, ?, ?),`
 	insVals_:= strings.Repeat(s, ln)
 	insVals := insVals_[0:len(insVals_)-1]
@@ -812,6 +879,8 @@ func MassReplace_{{ .Name }}(rows []{{ .Name }} ,db XODB) error {
 	
 	return nil
 }
+
+{{ end }}
 
 
 //////////////////// Play ///////////////////////////////
