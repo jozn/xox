@@ -86,6 +86,11 @@ var GRPC_TYOPES_MAP = map[string]string{// go type to => PB types
 
 const TMP_PB = `
 syntax = "proto3";
+option java_package = "ir.ms.pb";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME; //CODE_SIZE;
+
+option go_package = "x";
 
 {{range .Messages}}
 message PB_{{.MessageName }} {
