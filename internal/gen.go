@@ -421,7 +421,8 @@ func writeTypesPB() error {
 		return nil
 	}
 
-	filename := path.Join(c.Path, "proto_gen/tabels.proto")
+	//filename := path.Join(c.Path, "proto_gen/tabels.proto")
+	filename := path.Join(`C:\Go\_gopath\src\ms\sun\models\protos\`, "proto_gen/pb_tables.proto")
     os.MkdirAll(path.Dir(filename), os.ModeDir)
 
 	f, err = os.Create(filename)

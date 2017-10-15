@@ -29,7 +29,7 @@ type ProtoMessageFieldDef struct {
 
 func Gen_ProtosForTables(args *ArgType) {
 	tbls := c.Loader.CacheTables
-	filePB := ProtoFile{FileName: "pb_tabels"}
+	filePB := ProtoFile{FileName: "pb_tables"}
 
 	for _, t := range tbls {
 		tpb := ProtoMessageDef{
@@ -231,7 +231,7 @@ func MysqlParseTypeToProtoclBuffer(dt string, fromMysql bool) SqlToPBType {
             GoGen: "[]byte",
             table: "binary",
             Java: "[]byte",
-            PB: "????",
+            PB: "bytes",
         }
 
     case "timestamp", "datetime", "date", "time":

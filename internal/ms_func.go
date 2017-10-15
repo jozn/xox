@@ -114,13 +114,15 @@ func to_java_type(typ string) string {
 	t := strings.ToLower(typ)
 	switch t {
 	case "int", "int64", "int32":
-		return "Integer"
+		return "int"
 	case "string":
 		return "String"
 	case "float32":
-		return "Float"
+		return "float"
 	case "float64":
-		return "Double"
+		return "double"
+    case "binary", "varbinary", "tinyblob", "blob", "mediumblob", "longblob":
+        return "byte[]"
 	}
 	return "UNKNOWN"
 }
@@ -136,6 +138,8 @@ func datatype_to_defualt_go_type(typ string) string {
 		return "float32(0)"
 	case "float64":
 		return "float64(0)"
+    case "[]byte":
+        return "[]byte{}"
 	}
 	return "UNKNOWN"
 }
